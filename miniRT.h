@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/18 17:55:17 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/24 02:34:45 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # include "generic_lst.h"
 
 # define ERROR -1
+# define WIDTH 800
+# define HEIGHT 600
 
 enum e_type
 {
@@ -96,6 +98,26 @@ typedef struct s_scene
 	t_cylinder	*cy_lst;
 }	t_scene;
 
+typedef struct s_img {
+	void	*ptr;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_size;
+	int		endian;
+}	t_img;
+
+typedef struct s_screen
+{
+	void	*mlx_ptr;
+	void	*win_ptr;
+	t_img	img;
+}	t_screen;
+
+typedef struct s_ray
+{
+	double	origin[3];
+	double	direction[3];
+}	t_ray;
 // miniRT.c
 void	error_exit(char *msg, int code);
 
@@ -120,5 +142,21 @@ int		get_color(char **line);
 int		get_fov(char **line);
 void	get_coordinate(double *coord, char **line);
 void	get_vector(double vec[3], char **line);
+int 	validate_argument(char *line);
+
+
+// render
+void	init(t_screen *screen);
+void	render(t_scene *scene, t_screen *screen);
+
+// vector_utils.c
+double	*vector_add(double *vec1, double *vec2);
+double	*vector_sub(double *vec1, double *vec2);
+double	*scala_mul(double scala, double *vec1);
+double	*scala_div(double scala, double *vec1);
+double	length(double *vec);
+double	length_squared(double *vec);
+double	dot(double *vec1, double *vec2);
+double	*cross(double *vec1, double *vec2);
 
 #endif

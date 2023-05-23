@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/19 15:59:36 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/23 23:31:37 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	l_parser(t_scene *scene, char *line)
 {
 	t_light		*light;
 
-	light = malloc(sizeof(t_light));
+	light = (t_light*)malloc(sizeof(t_light));
 	if (!light)
 		exit(EXIT_FAILURE);
 	get_coordinate(light->coord, &line);
@@ -100,42 +100,42 @@ void	l_parser(t_scene *scene, char *line)
 		error_exit("Pasing error", 1);
 	light->color = get_color(&line);
 	light->next = NULL;
-	gl_lstadd_back(&(scene->l_lst), &light);
+	gl_lstadd_back((t_generic_lst **)&(scene->l_lst), (t_generic_lst *)light);
 }
 
 void	sp_parser(t_scene *scene, char *line)
 {
 	t_sphere	*sp;
 
-	sp = malloc(sizeof(t_sphere));
+	sp = (t_sphere*)malloc(sizeof(t_sphere));
 	if (!sp)
 		exit(EXIT_FAILURE);
 	get_coordinate(sp->coord, &line);
 	sp->diameter = get_float(&line);
 	sp->color = get_color(&line);
 	sp->next = NULL;
-	gl_lstadd_back(&(scene->sp_lst), &sp);
+	gl_lstadd_back((t_generic_lst **)&(scene->sp_lst), (t_generic_lst *)sp);
 }
 
 void	pl_parser(t_scene *scene, char *line)
 {
 	t_plane	*pl;
 
-	pl = malloc(sizeof(t_plane));
+	pl = (t_plane*)malloc(sizeof(t_plane));
 	if (!pl)
 		exit(EXIT_FAILURE);
 	get_coordinate(pl->coord, &line);
 	get_vector(pl->vec, &line);
 	pl->color = get_color(&line);
 	pl->next = NULL;
-	gl_lstadd_back(&(scene->pl_lst), &pl);
+	gl_lstadd_back((t_generic_lst **)&(scene->pl_lst), (t_generic_lst *)pl);
 }
 
 void	cy_parser(t_scene *scene, char *line)
 {
 	t_cylinder	*cy;
 
-	cy = malloc(sizeof(t_cylinder));
+	cy = (t_cylinder*)malloc(sizeof(t_cylinder));
 	if (!cy)
 		exit(EXIT_FAILURE);
 	get_coordinate(cy->coord, &line);
@@ -144,5 +144,5 @@ void	cy_parser(t_scene *scene, char *line)
 	cy->height = get_float(&line);
 	cy->color = get_color(&line);
 	cy->next = NULL;
-	gl_lstadd_back(&(scene->cy_lst), &cy);
+	gl_lstadd_back((t_generic_lst **)&(scene->cy_lst), (t_generic_lst *)cy);
 }

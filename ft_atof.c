@@ -6,6 +6,7 @@ double	make_double(const char *str, int *len)
 	int		i;
 
 	*len = 0;
+	result = 0;
 	while (*str >= '0' && *str <= '9')
 	{
 		result *= 10;
