@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/12 20:16:52 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/19 14:53:57 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,89 +14,53 @@
 
 int	main(int argc, char *argv[])
 {
-	int	fd;
+	int		fd;
+	t_scene	scene;
 	
 	fd = open(argv[1], O_RDONLY);
+	parser(fd, &scene);
 
-	// parser
-	parser(fd);
+	printf("===========ambient=============\n");
+	printf("ratio : %lf\n", scene.a.ratio);
+	printf("color : %d\n", scene.a.color);
+	printf("===========camera=============\n");
+	printf("coord => x: %lf y: %lf z: %lf\n", scene.c.coord[0], scene.c.coord[1], scene.c.coord[2]);
+	printf("vec => x: %lf y: %lf z: %lf\n", scene.c.vec[0], scene.c.vec[1], scene.c.vec[2]);
+	printf("fov : %d\n", scene.c.fov);
+	printf("===========light=============\n");
+	while (scene.l_lst)
+	{
+		printf("ratio : %lf\n", scene.l_lst->ratio);
+		printf("coord => x: %lf y: %lf z: %lf\n", scene.l_lst->coord[0], scene.l_lst->coord[1], scene.l_lst->coord[2]);
+		printf("color : %d\n", scene.l_lst->color);
+		scene.l_lst = scene.l_lst->next;
+	}
+	printf("===========sphere=============\n");
+	while (scene.sp_lst)
+	{
+		printf("%lf %lf %lf %lf %d\n", scene.sp_lst->coord[0], scene.sp_lst->coord[1], scene.sp_lst->coord[2], scene.sp_lst->diameter, scene.sp_lst->color);
+		scene.sp_lst = scene.sp_lst->next;
+	}
+	printf("===========plane=============\n");
+	while (scene.pl_lst)
+	{
+		printf("%lf %lf %lf %lf %lf %lf %d\n", scene.pl_lst->coord[0], scene.pl_lst->coord[1], scene.pl_lst->coord[2], scene.pl_lst->vec[0], scene.pl_lst->vec[1], scene.pl_lst->vec[2], scene.pl_lst->color);
+		scene.pl_lst = scene.pl_lst->next;
+	}
+	printf("===========cylinder=============\n");
+	while (scene.cy_lst)
+	{
+		printf("%lf %lf %lf %lf %lf %lf %lf %lf %d\n", scene.cy_lst->coord[0], scene.cy_lst->coord[1], scene.cy_lst->coord[2], scene.cy_lst->vec[0], scene.cy_lst->vec[1], scene.cy_lst->vec[2], scene.cy_lst->diameter, scene.cy_lst->height, scene.cy_lst->color);
+		scene.cy_lst = scene.cy_lst->next;
+	}
+
 	// mlx init
-
 	// render
-	
+	exit(0);
 }
 
-void	make_node()
+void	error_exit(char *msg, int code)
 {
-
+	perror(msg);
+	exit(code);
 }
-
-int	scan_id(char *str)
-{
-	int	id;
-
-	if (*str >= 'A' && *str <= 'Z' && *(str + 1) == ' ')
-	{
-		if (!strncmp(str, "A", 1))
-			id = A;
-		else if (!strncmp(str, "C", 1))
-			id = C;
-		else if (!strncmp(str, "L", 1))
-			id = L;
-	}
-	else if (*str >= 'a' && *str <= 'z' && *(str + 1) != ' ')
-	{
-		if (!strncmp(str, "sp", 2))
-			id = SP;
-		if (!strncmp(str, "pl", 2))
-			id = PL;
-		if (!strncmp(str, "cy", 2))
-			id = CY;
-	}
-	else
-		id = ERROR;
-	return (id);
-}
-
-void	parser(int fd)
-{
-	char *line;
-
-	while()
-	{
-		// read one line
-		line = get_next_line(fd);
-		scan_id(line);
-		// type
-			// make each node in linked_list
-
-			if ()
-			//A parser
-				// get_ratio()
-				// get_color()
-			//C parser
-				// get_vector()
-				// get_coordinate()
-				// get_fov()
-			//L parser
-				// get_coordinate()
-				// get_ratio()
-				// get_color()
-			//sp parser
-				// get_coordinate()
-				// get_diameter()
-				// get_color()
-			//pl parser
-				// get_coordinate()
-				// get_normal_vector()
-				// get_color()
-			//cy parser
-				// get_coordinate()
-				// get_vector()
-				// get_diameter()
-				// get_height()
-				// get_color()
-	}
-}
-
-// focal_length
