@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/24 02:24:57 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/24 18:20:07 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void	render(t_scene *scene, t_screen *screen)
 		while (x < WIDTH)
 		{
 			*pixel = color;
-			pixel = screen->img.addr + (y * screen->img.line_size + (x * (screen->img.bits_per_pixel / 8)));
+			pixel = screen->img.addr + (y * screen->img.line_size \
+					+ (x * (screen->img.bits_per_pixel / 8)));
 			x++;
 		}
 		y++;
@@ -104,82 +105,3 @@ void	error_exit(char *msg, int code)
 	exit(code);
 }
 
-double *vector_add(double *vec1, double *vec2)
-{
-	double	*vec;
-
-	vec = (double*)malloc(sizeof(double) * 3);
-	if (!vec)
-		error_exit("Memory Allocation Failed", 1);
-	vec[0] = vec1[0] + vec2[0];
-	vec[1] = vec1[1] + vec2[1];
-	vec[2] = vec1[2] + vec2[2];
-	return (vec);
-}
-
-double *vector_sub(double *vec1, double *vec2)
-{
-	double	*vec;
-
-	vec = (double*)malloc(sizeof(double) * 3);
-	if (!vec)
-		error_exit("Memory Allocation Failed", 1);
-	vec[0] = vec1[0] - vec2[0];
-	vec[1] = vec1[1] - vec2[1];
-	vec[2] = vec1[2] - vec2[2];
-	return (vec);
-}
-
-double *scala_mul(double scala, double *vec1)
-{
-	double	*vec;
-
-	vec = (double*)malloc(sizeof(double) * 3);
-	if (!vec)
-		error_exit("Memory Allocation Failed", 1);
-	vec[0] = scala * vec1[0];
-	vec[1] = scala * vec1[1];
-	vec[2] = scala * vec1[2];
-	return (vec);
-}
-
-double *scala_div(double scala, double *vec1)
-{
-	double	*vec;
-
-	vec = (double*)malloc(sizeof(double) * 3);
-	if (!vec)
-		error_exit("Memory Allocation Failed", 1);
-	vec[0] = vec1[0] / scala;
-	vec[1] = vec1[1] / scala;
-	vec[2] = vec1[2] / scala;
-	return (vec);
-}
-
-double length(double *vec) 
-{
-	return (sqrt(length_squared(vec)));
-}
-
-double length_squared(double *vec)
-{
-	return (vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);
-}
-
-double	dot(double *vec1, double *vec2)
-{
-	return (vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2]);
-}
-
-double *cross(double *vec1, double *vec2)
-{
-	double	*vec;
-
-	vec = (double*)malloc(sizeof(double) * 3);
-	if (!vec)
-		error_exit("Memory Allocation Failed", 1);
-	vec[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
-	vec[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
-	vec[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
-	return (vec);
-}

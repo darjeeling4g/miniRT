@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/24 02:34:45 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/24 02:56:02 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct s_ray
 	double	origin[3];
 	double	direction[3];
 }	t_ray;
+
 // miniRT.c
 void	error_exit(char *msg, int code);
 
@@ -143,7 +144,6 @@ int		get_fov(char **line);
 void	get_coordinate(double *coord, char **line);
 void	get_vector(double vec[3], char **line);
 int 	validate_argument(char *line);
-
 
 // render
 void	init(t_screen *screen);
