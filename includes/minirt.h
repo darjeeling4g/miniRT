@@ -29,10 +29,8 @@
 # include "vector.h"
 
 # define ERROR -1
-# define WIDTH 800
-# define IMAGE_WIDTH 800
-# define HEIGHT 600
-# define IMAGE_HEIGHT 800
+# define WIDTH 1600.0
+# define HEIGHT 900.0
 # define PI 3.1415926535897932385
 
 enum e_type

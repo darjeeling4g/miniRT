@@ -77,7 +77,7 @@ void	init(t_screen *screen)
 	screen->img.addr = mlx_get_data_addr(screen->img.ptr, &screen->img.bits_per_pixel, \
 		&screen->img.line_size, &screen->img.endian);	
 }
- 
+
 int	hit_sphere(t_point3 center, double radius, t_ray *ray)
 {
 	double	a;
@@ -85,17 +85,10 @@ int	hit_sphere(t_point3 center, double radius, t_ray *ray)
 	double	c;
 	double	discriminant;
 
-	t_point3	at;
-
 	a = dot(ray->direction, ray->direction);
 	b = 2.0 * dot(vector_sub(ray->origin, center), ray->direction);
 	c = dot(vector_sub(ray->origin, center), vector_sub(ray->origin, center)) - radius*radius;
-	discriminant = b * b - 4 * a * c;	
-	if (discriminant > 0)
-	{
-		at = ray_at(ray, 1);
-		printf("%lf %lf %lf\n", at.x, at.y, at.z);
-	}
+	discriminant = b * b - 4 * a * c;
 	return (discriminant > 0);
 }
 
@@ -128,17 +121,17 @@ void	render(t_scene *scene, t_screen *screen)
 	// camera
 	scene->c.focal_length = 1.0;
 
-	aspect_ratio = 16.0 / 9.0;
+	aspect_ratio = WIDTH / HEIGHT;
 	theta = degrees_to_radians(scene->c.fov);
 	h = tan(theta / 2) * scene->c.focal_length;
 
 	ray.origin = scene->c.coord;
 	scene->c.viewport_w = 2.0 * h;
-	scene->c.viewport_h = scene->c.viewport_w * aspect_ratio;
+	scene->c.viewport_h = scene->c.viewport_w / aspect_ratio;
 	scene->c.horizontal = vec3(scene->c.viewport_w, 0, 0);
 	scene->c.vertical = vec3(0, scene->c.viewport_h, 0);
 	scene->c.lower_left_corner = vector_sub(vector_sub(vector_sub(ray.origin, scala_div(scene->c.horizontal, 2)), \
-								scala_div(scene->c.vertical, 2)), vec3(0, 0, scene->c.focal_length));
+	scala_div(scene->c.vertical, 2)), vec3(0, 0, scene->c.focal_length));
 
 	pixel = (int *)screen->img.addr;
 	y = HEIGHT - 1;
