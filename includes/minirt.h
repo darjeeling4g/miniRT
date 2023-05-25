@@ -30,7 +30,9 @@
 
 # define ERROR -1
 # define WIDTH 800
+# define IMAGE_WIDTH 800
 # define HEIGHT 600
+# define IMAGE_HEIGHT 800
 # define PI 3.1415926535897932385
 
 enum e_type
@@ -134,6 +136,7 @@ typedef struct s_ray
 // utils.c
 void	error_exit(char *msg, int code);
 double	degrees_to_radians(double degrees);
+t_point3	ray_at(t_ray *ray, double t);
 
 // ft_atof.c
 double	ft_atof(const char *str);

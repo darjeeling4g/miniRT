@@ -22,6 +22,7 @@ int	main(int argc, char *argv[])
 	fd = open(argv[1], O_RDONLY);
 	parser(fd, &scene);
 
+	/*
 	printf("===========ambient=============\n");
 	printf("ratio : %lf\n", scene.a.ratio);
 	printf("color : %d\n", scene.a.color);
@@ -55,6 +56,7 @@ int	main(int argc, char *argv[])
 		printf("%lf %lf %lf %lf %lf %lf %lf %lf %d\n", scene.cy_lst->coord.x, scene.cy_lst->coord.y, scene.cy_lst->coord.z, scene.cy_lst->vec.x, scene.cy_lst->vec.y, scene.cy_lst->vec.z, scene.cy_lst->diameter, scene.cy_lst->height, scene.cy_lst->color);
 		scene.cy_lst = (t_cylinder *)scene.cy_lst->next;
 	}
+	*/
 
 	t_screen	screen;
 
@@ -75,24 +77,36 @@ void	init(t_screen *screen)
 	screen->img.addr = mlx_get_data_addr(screen->img.ptr, &screen->img.bits_per_pixel, \
 		&screen->img.line_size, &screen->img.endian);	
 }
-
-int	ray_color(t_ray *ray)
+ 
+int	hit_sphere(t_point3 center, double radius, t_ray *ray)
 {
-	t_vec3		unit_vec;
-    double		t;
-	int			temp[3];
+	double	a;
+	double	b;
+	double	c;
+	double	discriminant;
+
+	t_point3	at;
+
+	a = dot(ray->direction, ray->direction);
+	b = 2.0 * dot(vector_sub(ray->origin, center), ray->direction);
+	c = dot(vector_sub(ray->origin, center), vector_sub(ray->origin, center)) - radius*radius;
+	discriminant = b * b - 4 * a * c;	
+	if (discriminant > 0)
+	{
+		at = ray_at(ray, 1);
+		printf("%lf %lf %lf\n", at.x, at.y, at.z);
+	}
+	return (discriminant > 0);
+}
+
+int	ray_color(t_scene *scene, t_ray *ray)
+{
 	int			res;
 
 	res = 0;
-	unit_vec = unit_vector(ray->direction);
-	printf("%f\n", ray->direction.y);
-    t = 0.5 * (unit_vec.y + 1.0);
-	temp[0] = 255 * (1.0 - t) + 120 * t;
-	temp[1] = 255 * (1.0 - t) + 170 * t;
-	temp[2] = 255 * (1.0 - t) + 255 * t;
-	res += temp[0] << 16;
-	res += temp[1] << 8;
-	res += temp[2];
+	if (hit_sphere(scene->sp_lst->coord, scene->sp_lst->diameter / 2, ray))
+		return (scene->sp_lst->color);
+	res = 0x0;
 	return (res);
 }
 
@@ -101,6 +115,7 @@ void	render(t_scene *scene, t_screen *screen)
 	int	*pixel;
 	int	x;
 	int	y;
+	int	count;
 
 	double	aspect_ratio;
 	double	theta;
@@ -109,37 +124,39 @@ void	render(t_scene *scene, t_screen *screen)
 	double	u;
 	double	v;
 
+	count = 0;
 	// camera
 	scene->c.focal_length = 1.0;
 
-	aspect_ratio = WIDTH / HEIGHT;
+	aspect_ratio = 16.0 / 9.0;
 	theta = degrees_to_radians(scene->c.fov);
 	h = tan(theta / 2) * scene->c.focal_length;
 
+	ray.origin = scene->c.coord;
 	scene->c.viewport_w = 2.0 * h;
-	scene->c.viewport_h = scene->c.viewport_w / aspect_ratio;
+	scene->c.viewport_h = scene->c.viewport_w * aspect_ratio;
 	scene->c.horizontal = vec3(scene->c.viewport_w, 0, 0);
 	scene->c.vertical = vec3(0, scene->c.viewport_h, 0);
-	scene->c.top_left_corner = vector_sub(vector_sub(vector_sub(scene->c.coord, scala_mul(scene->c.horizontal, 2)), scala_mul(scene->c.vertical, 2)), vec3(0, 0, scene->c.focal_length));
-
-	ray.origin = scene->c.coord;
+	scene->c.lower_left_corner = vector_sub(vector_sub(vector_sub(ray.origin, scala_div(scene->c.horizontal, 2)), \
+								scala_div(scene->c.vertical, 2)), vec3(0, 0, scene->c.focal_length));
 
 	pixel = (int *)screen->img.addr;
-	y = 0;
-	while (y < HEIGHT)
+	y = HEIGHT - 1;
+	while (y >= 0)
 	{
 		x = 0;
 		while (x < WIDTH)
 		{
-			u = (double)x / (WIDTH - 1);
-			v = (double)y / (HEIGHT - 1);
-			ray.direction = vector_sub(vector_add(vector_add(scene->c.top_left_corner, scala_mul(scene->c.horizontal, u)), scala_mul(scene->c.vertical, v)), scene->c.coord);
-			*pixel = ray_color(&ray);
+			u = (double)x / (WIDTH - 1); // 0 ~ 1
+			v = (double)(HEIGHT - y - 1) / (HEIGHT - 1); // 0 ~ 1
+			ray.direction = vector_sub(vector_add(vector_add(scene->c.lower_left_corner, \
+							scala_mul(scene->c.horizontal, u)), scala_mul(scene->c.vertical, v)), ray.origin);
+			*pixel = ray_color(scene, &ray);
 			pixel = (int *)(screen->img.addr + (y * screen->img.line_size \
 					+ (x * (screen->img.bits_per_pixel / 8))));
 			x++;
 		}
-		y++;
+		y--;
 	}
 }
 
