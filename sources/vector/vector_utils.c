@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 02:26:53 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 17:34:16 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/25 18:32:19 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_vec3	vec3(double x, double y, double z)
 
 	vec.x = x;
 	vec.y = y;
-	vec.z = y;
+	vec.z = z;
 	return (vec);
 }
 
@@ -28,7 +28,7 @@ t_point3	point3(double x, double y, double z)
 
 	point.x = x;
 	point.y = y;
-	point.z = y;
+	point.z = z;
 	return (point);
 }
 
@@ -55,7 +55,7 @@ t_vec3	vector_sub(t_vec3 vec1, t_vec3 vec2)
 	return (vec1);
 }
 
-t_vec3	scala_mul(t_vec3 vec, double scale)
+t_vec3	scala_mul(t_vec3 vec, double scala)
 {
 	vec.x *= scala;
 	vec.y *= scala;
@@ -65,9 +65,9 @@ t_vec3	scala_mul(t_vec3 vec, double scale)
 
 t_vec3	scala_div(t_vec3 vec, double scala)
 {
-	vec.x /= scale;
-	vec.y /= scale;
-	vec.z /= scale;
+	vec.x /= scala;
+	vec.y /= scala;
+	vec.z /= scala;
 	return (vec);
 }
 
@@ -98,5 +98,5 @@ t_vec3	cross(t_vec3 vec1, t_vec3 vec2)
 
 t_vec3	unit_vector(t_vec3 vec)
 {
-	return (scala_div(vec, length(vec)))
+	return (scala_div(vec, length(vec)));
 }

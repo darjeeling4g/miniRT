@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 17:44:04 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/25 18:48:11 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,55 +76,65 @@ void	init(t_screen *screen)
 		&screen->img.line_size, &screen->img.endian);	
 }
 
+int	ray_color(t_ray *ray)
+{
+	t_vec3		unit_vec;
+    double		t;
+	int			temp[3];
+	int			res;
+
+	res = 0;
+	unit_vec = unit_vector(ray->direction);
+	printf("%f\n", ray->direction.y);
+    t = 0.5 * (unit_vec.y + 1.0);
+	temp[0] = 255 * (1.0 - t) + 120 * t;
+	temp[1] = 255 * (1.0 - t) + 170 * t;
+	temp[2] = 255 * (1.0 - t) + 255 * t;
+	res += temp[0] << 16;
+	res += temp[1] << 8;
+	res += temp[2];
+	return (res);
+}
+
 void	render(t_scene *scene, t_screen *screen)
 {
 	int	*pixel;
-	int	color;
 	int	x;
 	int	y;
 
-	/*
-	double	viewport_height;
-	double	viewport_width;
 	double	aspect_ratio;
-	double	focal_length;
 	double	theta;
 	double	h;
-	double	horizontal[3];
-	double	vertical[3];
-	double	top_left_corner[3];
 	t_ray	ray;
+	double	u;
+	double	v;
 
 	// camera
-	focal_length = 1.0;
+	scene->c.focal_length = 1.0;
+
 	aspect_ratio = WIDTH / HEIGHT;
 	theta = degrees_to_radians(scene->c.fov);
-	h = tan(theta / 2) * focal_length;
-	viewport_width = 2.0 * h;
-	viewport_height = viewport_width / aspect_ratio;
+	h = tan(theta / 2) * scene->c.focal_length;
 
-	ray.origin[X] = scene->c.coord[X];
-	ray.origin[Y] = scene->c.coord[Y];
-	ray.origin[Z] = scene->c.coord[Z];
+	scene->c.viewport_w = 2.0 * h;
+	scene->c.viewport_h = scene->c.viewport_w / aspect_ratio;
+	scene->c.horizontal = vec3(scene->c.viewport_w, 0, 0);
+	scene->c.vertical = vec3(0, scene->c.viewport_h, 0);
+	scene->c.top_left_corner = vector_sub(vector_sub(vector_sub(scene->c.coord, scala_mul(scene->c.horizontal, 2)), scala_mul(scene->c.vertical, 2)), vec3(0, 0, scene->c.focal_length));
 
-	horizontal[X] = viewport_width;
-	horizontal[Y] = 0;
-	horizontal[Z] = 0;
-
-	vertical[X] = 0;
-	vertical[Y] = viewport_height;
-	vertical[Z] = 0;
-	*/
+	ray.origin = scene->c.coord;
 
 	pixel = (int *)screen->img.addr;
-	color = 0xff0000;
 	y = 0;
 	while (y < HEIGHT)
 	{
 		x = 0;
 		while (x < WIDTH)
 		{
-			*pixel = color;
+			u = (double)x / (WIDTH - 1);
+			v = (double)y / (HEIGHT - 1);
+			ray.direction = vector_sub(vector_add(vector_add(scene->c.top_left_corner, scala_mul(scene->c.horizontal, u)), scala_mul(scene->c.vertical, v)), scene->c.coord);
+			*pixel = ray_color(&ray);
 			pixel = (int *)(screen->img.addr + (y * screen->img.line_size \
 					+ (x * (screen->img.bits_per_pixel / 8))));
 			x++;

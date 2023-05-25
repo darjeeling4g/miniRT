@@ -6,12 +6,14 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 15:40:12 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 17:35:52 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/25 18:32:17 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_H
 # define VECTOR_H
+
+# include <math.h>
 
 typedef struct s_vec3 t_vec3;
 typedef struct s_vec3 t_point3;

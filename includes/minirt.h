@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 17:39:32 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/25 18:47:07 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@ typedef struct s_camera
 	t_point3	coord;
 	t_vec3		vec;
 	int			fov;
+
+	double		viewport_h;
+	double		viewport_w;
+	t_vec3		horizontal;
+	t_vec3		vertical;
+	double		focal_length;
+	t_point3	lower_left_corner;
+
 }	t_camera;
 
 typedef struct s_light
