@@ -6,13 +6,13 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:47 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/24 02:56:10 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/25 16:56:16 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "miniRT.h"
+#include "minirt.h"
 
-double get_float(char **line)
+double	get_float(char **line)
 {
 	double res;
 
@@ -26,7 +26,7 @@ double get_float(char **line)
 	return (res);
 }
 
-int get_color(char **line)
+int	get_color(char **line)
 {
 	int res;
 	int value;
@@ -53,7 +53,7 @@ int get_color(char **line)
 	return (res);
 }
 
-int get_fov(char **line)
+int	get_fov(char **line)
 {
 	int res;
 
@@ -69,9 +69,11 @@ int get_fov(char **line)
 	return (res);
 }
 
-void get_coordinate(double *coord, char **line)
+t_point3	get_coordinate(char **line)
 {
-	int i;
+	t_point3	point;
+	double		temp[3];
+	int			i;
 
 	while (**line == ' ')
 		(*line)++;
@@ -80,18 +82,24 @@ void get_coordinate(double *coord, char **line)
 	{
 		if (!validate_argument(*line))
 			error_exit("Parsing Error", 1);
-		coord[i] = ft_atof(*line);
+		temp[i] = ft_atof(*line);
 		while ((**line >= '0' && **line <= '9') || **line == '.' || **line == '-' || **line == '+')
 			(*line)++;
 		if (**line == ',')
 			(*line)++;
 		i++;
 	}
+	point.x = temp[0];
+	point.y = temp[1];
+	point.z = temp[2];
+	return (point);
 }
 
-void get_vector(double vec[3], char **line)
+t_vec3	get_vector(char **line)
 {
-	int i;
+	t_vec3	vec;
+	double	temp[3];
+	int		i;
 
 	while (**line == ' ')
 		(*line)++;
@@ -100,18 +108,22 @@ void get_vector(double vec[3], char **line)
 	{
 		if (!validate_argument(*line))
 			error_exit("Parsing Error", 1);
-		if (vec[i] < -1.0 || vec[i] > 1.0)
+		temp[i] = ft_atof(*line);
+		if (temp[i] < -1.0 || temp[i] > 1.0)
 			error_exit("Parsing Error", 1);
-		vec[i] = ft_atof(*line);
 		while ((**line >= '0' && **line <= '9') || **line == '.' || **line == '-' || **line == '+')
 			(*line)++;
 		if (**line == ',')
 			(*line)++;
 		i++;
 	}
+	vec.x = temp[0];
+	vec.y = temp[1];
+	vec.z = temp[2];
+	return (vec);
 }
 
-int validate_argument(char *line)
+int	validate_argument(char *line)
 {
 	if (*line == '+')
 		line++;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   miniRT.h                                           :+:      :+:    :+:   */
+/*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/24 02:56:02 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/25 17:39:32 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@
 # include "libft.h"
 # include "get_next_line.h"
 # include "generic_lst.h"
+# include "vector.h"
 
 # define ERROR -1
 # define WIDTH 800
 # define HEIGHT 600
+# define PI 3.1415926535897932385
 
 enum e_type
 {
@@ -49,23 +51,23 @@ typedef struct s_ambient
 
 typedef struct s_camera
 {
-	double	coord[3];
-	double	vec[3];
-	int		fov;
+	t_point3	coord;
+	t_vec3		vec;
+	int			fov;
 }	t_camera;
 
 typedef struct s_light
 {
 	t_generic_lst	*next;
 	double			ratio;
-	double			coord[3];
+	t_point3		coord;
 	int				color;
 }	t_light;
 
 typedef struct s_sphere
 {
 	t_generic_lst	*next;
-	double			coord[3];
+	t_point3		coord;
 	double			diameter;
 	int				color;
 }	t_sphere;
@@ -73,16 +75,16 @@ typedef struct s_sphere
 typedef struct s_plane
 {
 	t_generic_lst	*next;
-	double			coord[3];
-	double			vec[3];
+	t_point3		coord;
+	t_vec3			vec;
 	int				color;
 }	t_plane;
 
 typedef struct s_cylinder
 {
 	t_generic_lst	*next;
-	double			coord[3];
-	double			vec[3];
+	t_point3		coord;
+	t_vec3			vec;
 	double			diameter;
 	double			height;
 	int				color;
@@ -115,12 +117,15 @@ typedef struct s_screen
 
 typedef struct s_ray
 {
-	double	origin[3];
-	double	direction[3];
+	t_point3	origin;
+	t_vec3		direction;
 }	t_ray;
 
-// miniRT.c
+// minirt.c
+
+// utils.c
 void	error_exit(char *msg, int code);
+double	degrees_to_radians(double degrees);
 
 // ft_atof.c
 double	ft_atof(const char *str);
@@ -138,25 +143,15 @@ void	pl_parser(t_scene *scene, char *line);
 void	cy_parser(t_scene *scene, char *line);
 
 // parser_utils.c
-double	get_float(char **line);
-int		get_color(char **line);
-int		get_fov(char **line);
-void	get_coordinate(double *coord, char **line);
-void	get_vector(double vec[3], char **line);
-int 	validate_argument(char *line);
+double		get_float(char **line);
+int			get_color(char **line);
+int			get_fov(char **line);
+t_point3	get_coordinate(char **line);
+t_vec3		get_vector(char **line);
+int 		validate_argument(char *line);
 
 // render
 void	init(t_screen *screen);
 void	render(t_scene *scene, t_screen *screen);
-
-// vector_utils.c
-double	*vector_add(double *vec1, double *vec2);
-double	*vector_sub(double *vec1, double *vec2);
-double	*scala_mul(double scala, double *vec1);
-double	*scala_div(double scala, double *vec1);
-double	length(double *vec);
-double	length_squared(double *vec);
-double	dot(double *vec1, double *vec2);
-double	*cross(double *vec1, double *vec2);
 
 #endif
