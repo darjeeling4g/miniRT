@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 21:23:58 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 22:16:36 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,17 @@
 # define WIDTH 1600.0
 # define HEIGHT 900.0
 # define PI 3.1415926535897932385
-# define INFINITY 0xffffffffffffffff
 # define T_MIN 0
-# define T_MAX INFINITY
+# define T_MAX HUGE_VAL
 
 enum e_type
 {
-	A,
-	C,
-	L,
 	SP,
 	PL,
-	CY	
+	CY,	
+	A,
+	C,
+	L
 };
 
 typedef struct s_ambient
@@ -79,6 +78,7 @@ typedef struct s_light
 typedef struct s_sphere
 {
 	t_generic_lst	*next;
+	int				id;
 	t_point3		coord;
 	double			radius;
 	int				color;
@@ -87,6 +87,7 @@ typedef struct s_sphere
 typedef struct s_plane
 {
 	t_generic_lst	*next;
+	int				id;
 	t_point3		coord;
 	t_vec3			vec;
 	int				color;
@@ -95,6 +96,7 @@ typedef struct s_plane
 typedef struct s_cylinder
 {
 	t_generic_lst	*next;
+	int				id;
 	t_point3		coord;
 	t_vec3			vec;
 	double			diameter;
@@ -104,13 +106,10 @@ typedef struct s_cylinder
 
 typedef struct s_scene
 {
-	t_ambient	a;
-	t_camera	c;
-	t_light		*l_lst;
-	
-	t_sphere	*sp_lst;
-	t_plane		*pl_lst;
-	t_cylinder	*cy_lst;
+	t_ambient		a;
+	t_camera		c;
+	t_light			*l_lst;
+	t_generic_lst	*obj_lst;
 }	t_scene;
 
 typedef struct s_img {
@@ -175,5 +174,10 @@ int 		validate_argument(char *line);
 // render
 void	init(t_screen *screen);
 void	render(t_scene *scene, t_screen *screen);
+
+// hit.c
+void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
+bool	hit_obj(t_generic_lst *obj, t_ray *ray, t_hit_record *rec);
+bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 #endif

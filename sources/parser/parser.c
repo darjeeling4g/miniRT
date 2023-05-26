@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 20:45:51 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 22:19:11 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	parser(int fd, t_scene *scene)
 		id = scan_id(line);
 		if (id == ERROR)
 			error_exit("Parsing Error", 1);
-		else if (id < SP)
+		else if (id >= A)
 			line++;
 		else
 			line += 2;
@@ -113,7 +113,8 @@ void	sp_parser(t_scene *scene, char *line)
 	sp->radius = get_float(&line) / 2.0;
 	sp->color = get_color(&line);
 	sp->next = NULL;
-	gl_lstadd_back((t_generic_lst **)&(scene->sp_lst), (t_generic_lst *)sp);
+	sp->id = SP;
+	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)sp);
 }
 
 void	pl_parser(t_scene *scene, char *line)
@@ -127,7 +128,8 @@ void	pl_parser(t_scene *scene, char *line)
 	pl->vec = get_vector(&line);
 	pl->color = get_color(&line);
 	pl->next = NULL;
-	gl_lstadd_back((t_generic_lst **)&(scene->pl_lst), (t_generic_lst *)pl);
+	pl->id = PL;
+	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)pl);
 }
 
 void	cy_parser(t_scene *scene, char *line)
@@ -143,5 +145,6 @@ void	cy_parser(t_scene *scene, char *line)
 	cy->height = get_float(&line);
 	cy->color = get_color(&line);
 	cy->next = NULL;
-	gl_lstadd_back((t_generic_lst **)&(scene->cy_lst), (t_generic_lst *)cy);
+	cy->id = CY;
+	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)cy);
 }

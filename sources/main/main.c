@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 21:24:08 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 22:10:51 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,22 +78,18 @@ void	init(t_screen *screen)
 		&screen->img.line_size, &screen->img.endian);	
 }
 
-int	ray_color(t_scene *scene, t_ray *ray)
+int	ray_color(t_generic_lst *obj_lst, t_ray *ray)
 {
-	int			res;
-	double		t;
-	t_vec3		n;
-	int			tmp[3];
+	t_hit_record	rec;
+	int				res;
+	int				tmp[3];
 
 	res = 0;
-	t = hit_sphere(scene->sp_lst->coord, scene->sp_lst->diameter / 2, ray);
-	if (t > 0.0)
+	if (hit_obj(obj_lst, ray, &rec))
 	{
-		n = unit_vector(vector_sub(ray_at(ray, t), vec3(0, 0, -1)));
-		//n = unit_vector(ray_at(ray, t));
-		tmp[0] = (n.x + 1) * 0.5 * 255.0;
-		tmp[1] = (n.y + 1) * 0.5 * 255.0;
-		tmp[2] = (n.z + 1) * 0.5 * 255.0;
+		tmp[0] = (rec.normal.x + 1) * 0.5 * 255.0;
+		tmp[1] = (rec.normal.y + 1) * 0.5 * 255.0;
+		tmp[2] = (rec.normal.z + 1) * 0.5 * 255.0;
 		res += tmp[0] << 16;
 		res += tmp[1] << 8;
 		res += tmp[2];
@@ -140,7 +136,7 @@ void	render(t_scene *scene, t_screen *screen)
 			v = (double)(HEIGHT - y - 1) / (HEIGHT - 1); // 0 ~ 1
 			ray.direction = vector_sub(vector_add(vector_add(scene->c.lower_left_corner, \
 							scala_mul(scene->c.horizontal, u)), scala_mul(scene->c.vertical, v)), ray.origin);
-			*pixel = ray_color(scene, &ray);
+			*pixel = ray_color(scene->obj_lst, &ray);
 			pixel = (int *)(screen->img.addr + (y * screen->img.line_size \
 					+ (x * (screen->img.bits_per_pixel / 8))));
 			x++;

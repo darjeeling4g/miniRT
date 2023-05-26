@@ -23,6 +23,7 @@ SRC_DIR				:= sources
 
 MAIN_DIR			:= main
 PARSER_DIR			:= parser
+OBJECT_DIR			:= object
 VECTOR_DIR			:= vector
 GENERIC_LST_DIR		:= generic_lst
 
@@ -35,6 +36,7 @@ OBJ_DIR				:= obj
 
 SRCS				:= $(addprefix $(SRC_DIR)/$(MAIN_DIR)/, main.c utils.c ft_atof.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(PARSER_DIR)/, parser.c parser_utils.c)
+SRCS				+= $(addprefix $(SRC_DIR)/$(OBJECT_DIR)/, hit.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(VECTOR_DIR)/, vector_utils.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(GENERIC_LST_DIR)/, generic_lst.c)
 
@@ -103,7 +105,7 @@ re:
 		@printf "$(GREEN)[$(NAME)] Cleaned and rebuilt everything!\n$(DEF_COLOR)"
 
 dir_guard:
-		@mkdir -p $(addprefix $(BUILD_DIR)/$(OBJ_DIR)/, $(MAIN_DIR) $(PARSER_DIR) $(VECTOR_DIR) $(GENERIC_LST_DIR))
+		@mkdir -p $(addprefix $(BUILD_DIR)/$(OBJ_DIR)/, $(MAIN_DIR) $(PARSER_DIR) $(OBJECT_DIR) $(VECTOR_DIR) $(GENERIC_LST_DIR))
 
 norm:
 		@$(MAKE) -C $(LIBFT_DIR) norm
