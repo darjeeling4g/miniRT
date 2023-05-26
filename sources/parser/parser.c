@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 17:06:43 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 20:45:51 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	sp_parser(t_scene *scene, char *line)
 	if (!sp)
 		exit(EXIT_FAILURE);
 	sp->coord = get_coordinate(&line);
-	sp->diameter = get_float(&line);
+	sp->radius = get_float(&line) / 2.0;
 	sp->color = get_color(&line);
 	sp->next = NULL;
 	gl_lstadd_back((t_generic_lst **)&(scene->sp_lst), (t_generic_lst *)sp);

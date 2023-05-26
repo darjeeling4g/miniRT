@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 18:48:11 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 21:24:08 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,29 +78,28 @@ void	init(t_screen *screen)
 		&screen->img.line_size, &screen->img.endian);	
 }
 
-int	hit_sphere(t_point3 center, double radius, t_ray *ray)
-{
-	double	a;
-	double	b;
-	double	c;
-	double	discriminant;
-
-	a = dot(ray->direction, ray->direction);
-	b = 2.0 * dot(vector_sub(ray->origin, center), ray->direction);
-	c = dot(vector_sub(ray->origin, center), vector_sub(ray->origin, center)) - radius*radius;
-	discriminant = b * b - 4 * a * c;
-	return (discriminant > 0);
-}
-
 int	ray_color(t_scene *scene, t_ray *ray)
 {
 	int			res;
+	double		t;
+	t_vec3		n;
+	int			tmp[3];
 
 	res = 0;
-	if (hit_sphere(scene->sp_lst->coord, scene->sp_lst->diameter / 2, ray))
-		return (scene->sp_lst->color);
-	res = 0x0;
-	return (res);
+	t = hit_sphere(scene->sp_lst->coord, scene->sp_lst->diameter / 2, ray);
+	if (t > 0.0)
+	{
+		n = unit_vector(vector_sub(ray_at(ray, t), vec3(0, 0, -1)));
+		//n = unit_vector(ray_at(ray, t));
+		tmp[0] = (n.x + 1) * 0.5 * 255.0;
+		tmp[1] = (n.y + 1) * 0.5 * 255.0;
+		tmp[2] = (n.z + 1) * 0.5 * 255.0;
+		res += tmp[0] << 16;
+		res += tmp[1] << 8;
+		res += tmp[2];
+		return (res);
+	}
+	return (0xffffff);
 }
 
 void	render(t_scene *scene, t_screen *screen)
@@ -108,7 +107,6 @@ void	render(t_scene *scene, t_screen *screen)
 	int	*pixel;
 	int	x;
 	int	y;
-	int	count;
 
 	double	aspect_ratio;
 	double	theta;
@@ -117,8 +115,6 @@ void	render(t_scene *scene, t_screen *screen)
 	double	u;
 	double	v;
 
-	count = 0;
-	// camera
 	scene->c.focal_length = 1.0;
 
 	aspect_ratio = WIDTH / HEIGHT;
@@ -152,4 +148,3 @@ void	render(t_scene *scene, t_screen *screen)
 		y--;
 	}
 }
-

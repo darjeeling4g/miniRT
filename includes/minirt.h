@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 18:47:07 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 21:23:58 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <stdlib.h>
 // malloc, free, exit
 # include <math.h>
+# include <stdbool.h>
 # include "mlx.h"
 # include "libft.h"
 # include "get_next_line.h"
@@ -32,6 +33,9 @@
 # define WIDTH 1600.0
 # define HEIGHT 900.0
 # define PI 3.1415926535897932385
+# define INFINITY 0xffffffffffffffff
+# define T_MIN 0
+# define T_MAX INFINITY
 
 enum e_type
 {
@@ -76,7 +80,7 @@ typedef struct s_sphere
 {
 	t_generic_lst	*next;
 	t_point3		coord;
-	double			diameter;
+	double			radius;
 	int				color;
 }	t_sphere;
 
@@ -103,6 +107,7 @@ typedef struct s_scene
 	t_ambient	a;
 	t_camera	c;
 	t_light		*l_lst;
+	
 	t_sphere	*sp_lst;
 	t_plane		*pl_lst;
 	t_cylinder	*cy_lst;
@@ -128,6 +133,14 @@ typedef struct s_ray
 	t_point3	origin;
 	t_vec3		direction;
 }	t_ray;
+
+typedef struct s_hit_record
+{
+	t_point3	p;
+	t_vec3		normal;
+	double		t;
+	bool		front_face;
+}	t_hit_record;
 
 // minirt.c
 
