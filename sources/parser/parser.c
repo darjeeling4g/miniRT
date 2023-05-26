@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 22:19:11 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 22:24:34 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,22 @@ void	parser(int fd, t_scene *scene)
 		id = scan_id(line);
 		if (id == ERROR)
 			error_exit("Parsing Error", 1);
-		else if (id >= A)
-			line++;
-		else
+		else if (id < A)
 			line += 2;
+		else
+			line++;
 		fp[id](scene, line);
 	}
 }
 
 void	init_parser(void (*fp[6])(t_scene *, char *))
 {
-	fp[0] = a_parser;
-	fp[1] = c_parser;
-	fp[2] = l_parser;
-	fp[3] = sp_parser;
-	fp[4] = pl_parser;
-	fp[5] = cy_parser;
+	fp[0] = sp_parser;
+	fp[1] = pl_parser;
+	fp[2] = cy_parser;
+	fp[3] = a_parser;
+	fp[4] = c_parser;
+	fp[5] = l_parser;
 }
 
 int	scan_id(char *str)

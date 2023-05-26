@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 22:10:51 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/26 22:32:04 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	main(int argc, char *argv[])
 	render(&scene, &screen);
 	mlx_put_image_to_window(screen.mlx_ptr, screen.win_ptr, screen.img.ptr, 0, 0);
 	mlx_loop(screen.mlx_ptr);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 void	init(t_screen *screen)
@@ -87,9 +87,9 @@ int	ray_color(t_generic_lst *obj_lst, t_ray *ray)
 	res = 0;
 	if (hit_obj(obj_lst, ray, &rec))
 	{
-		tmp[0] = (rec.normal.x + 1) * 0.5 * 255.0;
-		tmp[1] = (rec.normal.y + 1) * 0.5 * 255.0;
-		tmp[2] = (rec.normal.z + 1) * 0.5 * 255.0;
+		tmp[0] = (rec.normal.x + 1.0) * 0.5 * 255.0;
+		tmp[1] = (rec.normal.y + 1.0) * 0.5 * 255.0;
+		tmp[2] = (rec.normal.z + 1.0) * 0.5 * 255.0;
 		res += tmp[0] << 16;
 		res += tmp[1] << 8;
 		res += tmp[2];
