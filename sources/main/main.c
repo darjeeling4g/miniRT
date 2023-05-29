@@ -6,125 +6,106 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 22:32:04 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/29 22:06:05 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int	main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-	int		fd;
-	t_scene	scene;
-	
+	int fd;
+	t_scene scene;
+	t_screen screen;
+
 	if (argc != 2)
 		error_exit("Error: invalid argument", 1);
 	fd = open(argv[1], O_RDONLY);
 	parser(fd, &scene);
-
-	/*
-	printf("===========ambient=============\n");
-	printf("ratio : %lf\n", scene.a.ratio);
-	printf("color : %d\n", scene.a.color);
-	printf("===========camera=============\n");
-	printf("coord => x: %lf y: %lf z: %lf\n", scene.c.coord.x, scene.c.coord.y, scene.c.coord.z);
-	printf("vec => x: %lf y: %lf z: %lf\n", scene.c.vec.x, scene.c.vec.y, scene.c.vec.z);
-	printf("fov : %d\n", scene.c.fov);
-	printf("===========light=============\n");
-	while (scene.l_lst)
-	{
-		printf("ratio : %lf\n", scene.l_lst->ratio);
-		printf("coord => x: %lf y: %lf z: %lf\n", scene.l_lst->coord.x, scene.l_lst->coord.y, scene.l_lst->coord.z);
-		printf("color : %d\n", scene.l_lst->color);
-		scene.l_lst = (t_light *)scene.l_lst->next;
-	}
-	printf("===========sphere=============\n");
-	while (scene.sp_lst)
-	{
-		printf("%lf %lf %lf %lf %d\n", scene.sp_lst->coord.x, scene.sp_lst->coord.y, scene.sp_lst->coord.z, scene.sp_lst->diameter, scene.sp_lst->color);
-		scene.sp_lst = (t_sphere *)scene.sp_lst->next;
-	}
-	printf("===========plane=============\n");
-	while (scene.pl_lst)
-	{
-		printf("%lf %lf %lf %lf %lf %lf %d\n", scene.pl_lst->coord.x, scene.pl_lst->coord.y, scene.pl_lst->coord.z, scene.pl_lst->vec.x, scene.pl_lst->vec.y, scene.pl_lst->vec.z, scene.pl_lst->color);
-		scene.pl_lst = (t_plane *)scene.pl_lst->next;
-	}
-	printf("===========cylinder=============\n");
-	while (scene.cy_lst)
-	{
-		printf("%lf %lf %lf %lf %lf %lf %lf %lf %d\n", scene.cy_lst->coord.x, scene.cy_lst->coord.y, scene.cy_lst->coord.z, scene.cy_lst->vec.x, scene.cy_lst->vec.y, scene.cy_lst->vec.z, scene.cy_lst->diameter, scene.cy_lst->height, scene.cy_lst->color);
-		scene.cy_lst = (t_cylinder *)scene.cy_lst->next;
-	}
-	*/
-
-	t_screen	screen;
-
-	init(&screen);	
-	// render
+	init(&screen);
 	render(&scene, &screen);
 	mlx_put_image_to_window(screen.mlx_ptr, screen.win_ptr, screen.img.ptr, 0, 0);
 	mlx_loop(screen.mlx_ptr);
 	exit(EXIT_SUCCESS);
 }
 
-void	init(t_screen *screen)
+void init(t_screen *screen)
 {
 	// mlx init
 	screen->mlx_ptr = mlx_init();
 	screen->win_ptr = mlx_new_window(screen->mlx_ptr, WIDTH, HEIGHT, "miniRT");
 	screen->img.ptr = mlx_new_image(screen->mlx_ptr, WIDTH, HEIGHT);
-	screen->img.addr = mlx_get_data_addr(screen->img.ptr, &screen->img.bits_per_pixel, \
-		&screen->img.line_size, &screen->img.endian);	
+	screen->img.addr = mlx_get_data_addr(screen->img.ptr, &screen->img.bits_per_pixel,
+										 &screen->img.line_size, &screen->img.endian);
 }
 
-int	ray_color(t_generic_lst *obj_lst, t_ray *ray)
+int write_color(t_color3 color)
 {
-	t_hit_record	rec;
-	int				res;
-	int				tmp[3];
+	int res;
+	int tmp[3];
 
 	res = 0;
-	if (hit_obj(obj_lst, ray, &rec))
-	{
-		tmp[0] = (rec.normal.x + 1.0) * 0.5 * 255.0;
-		tmp[1] = (rec.normal.y + 1.0) * 0.5 * 255.0;
-		tmp[2] = (rec.normal.z + 1.0) * 0.5 * 255.0;
-		res += tmp[0] << 16;
-		res += tmp[1] << 8;
-		res += tmp[2];
-		return (res);
-	}
-	return (0xffffff);
+	tmp[0] = clamp(((color.x / SAMPLES) + 1.0) * 0.5, 0.0, 1.0) * 255.0;
+	tmp[1] = clamp(((color.y / SAMPLES) + 1.0) * 0.5, 0.0, 1.0) * 255.0;
+	tmp[2] = clamp(((color.z / SAMPLES) + 1.0) * 0.5, 0.0, 1.0) * 255.0;
+	res += tmp[0] << 16;
+	res += tmp[1] << 8;
+	res += tmp[2];
+	return (res);
 }
 
-void	render(t_scene *scene, t_screen *screen)
+t_color3 ray_color(t_generic_lst *obj_lst, t_ray *ray)
 {
-	int	*pixel;
-	int	x;
-	int	y;
+	t_hit_record rec;
 
-	double	aspect_ratio;
-	double	theta;
-	double	h;
-	t_ray	ray;
-	double	u;
-	double	v;
+	if (hit_obj(obj_lst, ray, &rec))
+		return (rec.normal);
+	return (color3(1.0, 1.0, 1.0));
+}
+
+void cam_init(t_scene *scene)
+{
+	double theta;
+	double h;
+	double aspect_ratio;
 
 	scene->c.focal_length = 1.0;
-
 	aspect_ratio = WIDTH / HEIGHT;
 	theta = degrees_to_radians(scene->c.fov);
 	h = tan(theta / 2) * scene->c.focal_length;
-
-	ray.origin = scene->c.coord;
 	scene->c.viewport_w = 2.0 * h;
 	scene->c.viewport_h = scene->c.viewport_w / aspect_ratio;
 	scene->c.horizontal = vec3(scene->c.viewport_w, 0, 0);
 	scene->c.vertical = vec3(0, scene->c.viewport_h, 0);
-	scene->c.lower_left_corner = vector_sub(vector_sub(vector_sub(ray.origin, scala_div(scene->c.horizontal, 2)), \
-	scala_div(scene->c.vertical, 2)), vec3(0, 0, scene->c.focal_length));
+	scene->c.lower_left_corner = vector_sub(vector_sub(vector_sub(scene->c.coord, scala_div(scene->c.horizontal, 2)),
+													   scala_div(scene->c.vertical, 2)),
+											vec3(0, 0, scene->c.focal_length));
+}
 
+t_ray get_ray(t_camera cam, double u, double v)
+{
+	t_ray ray;
+
+	ray.origin = cam.coord;
+	ray.direction = vector_sub(vector_add(vector_add(cam.lower_left_corner,
+													 scala_mul(cam.horizontal, u)),
+										  scala_mul(cam.vertical, v)),
+							   ray.origin);
+	return (ray);
+}
+
+void render(t_scene *scene, t_screen *screen)
+{
+	int *pixel;
+	int x;
+	int y;
+	t_ray ray;
+	double u;
+	double v;
+	int i;
+	t_color3 color;
+
+	cam_init(scene);
 	pixel = (int *)screen->img.addr;
 	y = HEIGHT - 1;
 	while (y >= 0)
@@ -132,13 +113,19 @@ void	render(t_scene *scene, t_screen *screen)
 		x = 0;
 		while (x < WIDTH)
 		{
-			u = (double)x / (WIDTH - 1); // 0 ~ 1
-			v = (double)(HEIGHT - y - 1) / (HEIGHT - 1); // 0 ~ 1
-			ray.direction = vector_sub(vector_add(vector_add(scene->c.lower_left_corner, \
-							scala_mul(scene->c.horizontal, u)), scala_mul(scene->c.vertical, v)), ray.origin);
-			*pixel = ray_color(scene->obj_lst, &ray);
-			pixel = (int *)(screen->img.addr + (y * screen->img.line_size \
-					+ (x * (screen->img.bits_per_pixel / 8))));
+			i = 0;
+			color = color3(0.0, 0.0, 0.0);
+			while (i < SAMPLES)
+			{
+				u = (double)(x + random_double(i)) / (WIDTH - 1);				// 0 ~ 1
+				v = (double)(HEIGHT - y - 1 + random_double(i)) / (HEIGHT - 1); // 0 ~ 1
+				ray = get_ray(scene->c, u, v);
+				color = vector_add(color, ray_color(scene->obj_lst, &ray));
+				i++;
+			}
+			// *pixel = ray_color(scene->obj_lst, &ray);
+			*pixel = write_color(color);
+			pixel = (int *)(screen->img.addr + (y * screen->img.line_size + (x * (screen->img.bits_per_pixel / 8))));
 			x++;
 		}
 		y--;

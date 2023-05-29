@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 22:16:36 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/29 22:08:10 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@
 # define T_MIN 0
 # define T_MAX HUGE_VAL
 
+# define RANDOM_A 1103515245
+# define RANDOM_C 12345
+# define RANDOM_M 2147483648
+
+# define SAMPLES 1
+
 enum e_type
 {
 	SP,
@@ -57,14 +63,12 @@ typedef struct s_camera
 	t_point3	coord;
 	t_vec3		vec;
 	int			fov;
-
 	double		viewport_h;
 	double		viewport_w;
 	t_vec3		horizontal;
 	t_vec3		vertical;
 	double		focal_length;
 	t_point3	lower_left_corner;
-
 }	t_camera;
 
 typedef struct s_light
@@ -144,9 +148,11 @@ typedef struct s_hit_record
 // minirt.c
 
 // utils.c
-void	error_exit(char *msg, int code);
-double	degrees_to_radians(double degrees);
+void		error_exit(char *msg, int code);
+double		degrees_to_radians(double degrees);
 t_point3	ray_at(t_ray *ray, double t);
+double		random_double(int seed);
+double		clamp(double x, double min, double max);
 
 // ft_atof.c
 double	ft_atof(const char *str);

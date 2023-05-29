@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 02:26:53 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 18:32:19 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/29 21:32:59 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@ t_point3	point3(double x, double y, double z)
 	return (point);
 }
 
+t_color3	color3(double x, double y, double z)
+{
+	t_color3	color;
+
+	color.x = x;
+	color.y = y;
+	color.z = z;
+	return (color);
+
+}
 void	vector_set(t_vec3 *vec, double x, double y, double z)
 {
 	vec->x = x;

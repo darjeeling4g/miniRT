@@ -49,22 +49,22 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	b = 2.0 * dot(vector_sub(ray->origin, sphere->coord), ray->direction);
 	c = dot(vector_sub(ray->origin, sphere->coord), vector_sub(ray->origin, sphere->coord)) - sphere->radius * sphere->radius;
 	discriminant = b * b - 4.0 * a * c;
-	if (discriminant < 0)
+	if (discriminant < 0.0)
 		return (false);
 	sqrtd = sqrt(discriminant);
 
 	// Find the nearest root that lies in the acceptable range.
-	root = (-b - sqrtd) / 2.0 * a;
+	root = (-b - sqrtd) / (2.0 * a);
 	if (root < T_MIN || root > t_max)
 	{
-		root = (-b + sqrtd) / 2.0 * a;
+		root = (-b + sqrtd) / (2.0 * a);
 		if (root < T_MIN || root > t_max)
 			return (false);
 	}
 	rec->t = root;
 	rec->p = ray_at(ray, rec->t);
 	rec->normal = scala_div(vector_sub(rec->p, sphere->coord), sphere->radius);
-	if (dot(ray->direction, rec->normal) < 0)
+	if (dot(ray->direction, rec->normal) < 0.0)
 		rec->front_face = true;
 	else
 	{
