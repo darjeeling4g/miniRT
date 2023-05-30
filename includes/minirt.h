@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 17:29:54 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 19:54:24 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 # define RANDOM_C 12345
 # define RANDOM_M 2147483648
 
-# define SAMPLES 150
+# define SAMPLES 1
 
 enum e_type
 {
@@ -198,5 +198,6 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 
 // phong_lighting.c
 t_color3	phong_lighting(t_scene *scene, t_hit_record rec);
+t_color3	point_light(t_light light, t_hit_record rec);
 
 #endif

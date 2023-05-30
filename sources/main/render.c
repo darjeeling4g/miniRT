@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 16:50:32 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 19:53:23 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ int	write_color(t_color3 color)
 	int res;
 	int tmp[3];
 
-	res = 0;
-	tmp[0] = clamp(((color.x / SAMPLES) + 1.0) * 0.5, 0.0, 1.0) * 255.0;
-	tmp[1] = clamp(((color.y / SAMPLES) + 1.0) * 0.5, 0.0, 1.0) * 255.0;
-	tmp[2] = clamp(((color.z / SAMPLES) + 1.0) * 0.5, 0.0, 1.0) * 255.0;
+	res = 0x0;
+	tmp[0] = clamp(color.x / SAMPLES, 0.0, 1.0) * 255.0;
+	tmp[1] = clamp(color.y / SAMPLES, 0.0, 1.0) * 255.0;
+	tmp[2] = clamp(color.z / SAMPLES, 0.0, 1.0) * 255.0;
 	res += tmp[0] << 16;
 	res += tmp[1] << 8;
 	res += tmp[2];
