@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 20:47:16 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 21:03:07 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@
 
 # define SPEC_SHININESS 32
 # define SPEC_STRENGTH 0.5
+# define LUMEN 1
 
 enum e_type
 {
