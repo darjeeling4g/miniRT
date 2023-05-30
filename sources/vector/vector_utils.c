@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 02:26:53 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 17:24:07 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 20:25:11 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,9 @@ t_vec3	cross(t_vec3 vec1, t_vec3 vec2)
 t_vec3	unit_vector(t_vec3 vec)
 {
 	return (scala_div(vec, length(vec)));
+}
+
+t_vec3	reflect(t_vec3 vec, t_vec3 normal)
+{
+	return (vector_sub(scala_mul(normal, dot(vec, normal) * 2.0), vec));
 }
