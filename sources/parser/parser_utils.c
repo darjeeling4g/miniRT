@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:47 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 16:56:16 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 15:41:42 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,31 +26,30 @@ double	get_float(char **line)
 	return (res);
 }
 
-int	get_color(char **line)
+t_color3	get_color(char **line)
 {
-	int res;
-	int value;
-	int i;
+	double	temp[3];
+	int		value;
+	int		i;
 
-	res = 0;
 	while (**line == ' ')
 		(*line)++;
-	i = 2;
-	while (i >= 0)
+	i = 0;
+	while (i < 3)
 	{
 		if (!validate_argument(*line))
 			error_exit("Parsing Error", 1);
 		value = ft_atoi(*line);
 		if (value < 0 || value > 255)
 			error_exit("Parsing Error", 1);
-		res += (value << 8 * i);
+		temp[i] = value;
 		while (**line >= '0' && **line <= '9')
 			(*line)++;
 		if (**line == ',')
 			(*line)++;
-		i--;
+		i++;
 	}
-	return (res);
+	return (color3(temp[0], temp[1], temp[2]));
 }
 
 int	get_fov(char **line)

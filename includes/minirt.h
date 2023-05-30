@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/29 22:08:10 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 15:37:37 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,24 @@
 # include "vector.h"
 
 # define ERROR -1
+
 # define WIDTH 1600.0
 # define HEIGHT 900.0
-# define PI 3.1415926535897932385
-# define T_MIN 0
+# define T_MIN 0.0
 # define T_MAX HUGE_VAL
+# define PI 3.1415926535897932385
 
 # define RANDOM_A 1103515245
 # define RANDOM_C 12345
 # define RANDOM_M 2147483648
 
-# define SAMPLES 1
+# define SAMPLES 150
 
 enum e_type
 {
 	SP,
 	PL,
-	CY,	
+	CY,
 	A,
 	C,
 	L
@@ -54,8 +55,8 @@ enum e_type
 
 typedef struct s_ambient
 {
-	double	ratio;
-	int		color;
+	double		ratio;
+	t_color3	color;
 }	t_ambient;
 
 typedef struct s_camera
@@ -76,7 +77,7 @@ typedef struct s_light
 	t_generic_lst	*next;
 	double			ratio;
 	t_point3		coord;
-	int				color;
+	t_color3		color;
 }	t_light;
 
 typedef struct s_sphere
@@ -85,7 +86,7 @@ typedef struct s_sphere
 	int				id;
 	t_point3		coord;
 	double			radius;
-	int				color;
+	t_color3		color;
 }	t_sphere;
 
 typedef struct s_plane
@@ -94,7 +95,7 @@ typedef struct s_plane
 	int				id;
 	t_point3		coord;
 	t_vec3			vec;
-	int				color;
+	t_color3		color;
 }	t_plane;
 
 typedef struct s_cylinder
@@ -105,7 +106,7 @@ typedef struct s_cylinder
 	t_vec3			vec;
 	double			diameter;
 	double			height;
-	int				color;
+	t_color3		color;
 }	t_cylinder;
 
 typedef struct s_scene
@@ -145,14 +146,15 @@ typedef struct s_hit_record
 	bool		front_face;
 }	t_hit_record;
 
-// minirt.c
+// main.c
+void	init(t_screen *screen);
+void	render(t_scene *scene, t_screen *screen);
 
 // utils.c
-void		error_exit(char *msg, int code);
-double		degrees_to_radians(double degrees);
-t_point3	ray_at(t_ray *ray, double t);
-double		random_double(int seed);
-double		clamp(double x, double min, double max);
+void	error_exit(char *msg, int code);
+double	degrees_to_radians(double degrees);
+double	random_double(int seed);
+double	clamp(double x, double min, double max);
 
 // ft_atof.c
 double	ft_atof(const char *str);
@@ -171,15 +173,21 @@ void	cy_parser(t_scene *scene, char *line);
 
 // parser_utils.c
 double		get_float(char **line);
-int			get_color(char **line);
+t_color3	get_color(char **line);
 int			get_fov(char **line);
 t_point3	get_coordinate(char **line);
 t_vec3		get_vector(char **line);
 int 		validate_argument(char *line);
 
-// render
-void	init(t_screen *screen);
+// render.c
 void	render(t_scene *scene, t_screen *screen);
+int		write_color(t_color3 color);
+void	cam_init(t_scene *scene);
+
+// ray.c
+t_point3	ray_at(t_ray *ray, double t);
+t_color3	ray_color(t_generic_lst *obj_lst, t_ray *ray);
+t_ray		get_ray(t_camera cam, double u, double v);
 
 // hit.c
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
