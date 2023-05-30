@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 15:40:12 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/29 21:34:02 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 17:23:57 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_color3	color3(double x, double y, double z);
 void		vector_set(t_vec3 *vec, double x, double y, double z);
 t_vec3		vector_add(t_vec3 vec1, t_vec3 vec2);
 t_vec3		vector_sub(t_vec3 vec1, t_vec3 vec2);
+t_vec3		vector_mul(t_vec3 vec1, t_vec3 vec2);
 t_vec3		scala_mul(t_vec3 vec, double scale);
 t_vec3		scala_div(t_vec3 vec, double scala);
 double		length(t_vec3 vec);

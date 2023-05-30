@@ -27,6 +27,7 @@ bool	hit_obj(t_generic_lst *obj, t_ray *ray, t_hit_record *rec)
 			rec->normal = temp_rec.normal;
 			rec->t = temp_rec.t;
 			rec->front_face = temp_rec.front_face;
+			rec->color = temp_rec.color;
 		}
 		obj = obj->next;
 	}
@@ -36,12 +37,12 @@ bool	hit_obj(t_generic_lst *obj, t_ray *ray, t_hit_record *rec)
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_sphere	*sphere;
-	double	a;
-	double	b;
-	double	c;
-	double	discriminant;
-	double	sqrtd;
-	double	root;
+	double		a;
+	double		b;
+	double		c;
+	double		discriminant;
+	double		sqrtd;
+	double		root;
 
 	// 추후 최적화 예정 (짝수공식으로)
 	sphere = (t_sphere *)obj;
@@ -71,5 +72,6 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1);
 	}
+	rec->color = sphere->color;
 	return (true);
 }

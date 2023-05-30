@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 15:37:37 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 17:29:54 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ typedef struct s_hit_record
 	t_vec3		normal;
 	double		t;
 	bool		front_face;
+	t_color3	color;
 }	t_hit_record;
 
 // main.c
@@ -155,6 +156,7 @@ void	error_exit(char *msg, int code);
 double	degrees_to_radians(double degrees);
 double	random_double(int seed);
 double	clamp(double x, double min, double max);
+t_vec3	vector_clamp(t_vec3 vec, double min, double max);
 
 // ft_atof.c
 double	ft_atof(const char *str);
@@ -186,12 +188,15 @@ void	cam_init(t_scene *scene);
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);
-t_color3	ray_color(t_generic_lst *obj_lst, t_ray *ray);
+t_color3	ray_color(t_scene *scene, t_ray *ray);
 t_ray		get_ray(t_camera cam, double u, double v);
 
 // hit.c
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+
+// phong_lighting.c
+t_color3	phong_lighting(t_scene *scene, t_hit_record rec);
 
 #endif

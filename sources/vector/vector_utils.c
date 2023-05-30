@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 02:26:53 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/29 21:32:59 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 17:24:07 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,14 @@ t_vec3	vector_sub(t_vec3 vec1, t_vec3 vec2)
 	vec1.x -= vec2.x;
 	vec1.y -= vec2.y;
 	vec1.z -= vec2.z;
+	return (vec1);
+}
+
+t_vec3	vector_mul(t_vec3 vec1, t_vec3 vec2)
+{
+	vec1.x *= vec2.x;
+	vec1.y *= vec2.y;
+	vec1.z *= vec2.z;
 	return (vec1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 15:00:26 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 16:50:32 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	render(t_scene *scene, t_screen *screen)
 				u = (double)(x + random_double(i)) / (WIDTH - 1);
 				v = (double)(HEIGHT - y - 1 + random_double(i)) / (HEIGHT - 1);
 				ray = get_ray(scene->c, u, v);
-				color = vector_add(color, ray_color(scene->obj_lst, &ray));
+				color = vector_add(color, ray_color(scene, &ray));
 				i++;
 			}
 			*pixel = write_color(color);

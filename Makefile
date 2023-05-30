@@ -34,7 +34,7 @@ OBJ_DIR				:= obj
 #	Define the source files													   #
 # ---------------------------------------------------------------------------- #
 
-SRCS				:= $(addprefix $(SRC_DIR)/$(MAIN_DIR)/, main.c utils.c ft_atof.c render.c ray.c)
+SRCS				:= $(addprefix $(SRC_DIR)/$(MAIN_DIR)/, main.c utils.c ft_atof.c render.c ray.c phong_lighting.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(PARSER_DIR)/, parser.c parser_utils.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(OBJECT_DIR)/, hit.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(VECTOR_DIR)/, vector_utils.c)

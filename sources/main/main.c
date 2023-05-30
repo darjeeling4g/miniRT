@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 14:57:11 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 15:47:03 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int main(int argc, char *argv[])
 {
-	int fd;
-	t_scene scene;
-	t_screen screen;
+	int			fd;
+	t_scene		scene;
+	t_screen	screen;
 
 	if (argc != 2)
 		error_exit("Error: invalid argument", 1);

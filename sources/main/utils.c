@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 14:35:44 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 14:42:53 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/30 17:29:43 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,12 @@ double	clamp(double x, double min, double max)
 	if (x > max)
 		return (max);
 	return (x);
+}
+
+t_vec3	vector_clamp(t_vec3 vec, double min, double max)
+{
+	vec.x = clamp(vec.x, min, max);
+	vec.y = clamp(vec.y, min, max);
+	vec.z = clamp(vec.z, min, max);
+	return (vec);
 }
