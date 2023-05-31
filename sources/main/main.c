@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/31 22:09:36 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 22:37:32 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ int main(int argc, char *argv[])
 	scene.samples = 1;
 	render(&scene, &screen);
 	mlx_put_image_to_window(screen.mlx_ptr, screen.win_ptr, screen.img.ptr, 0, 0);
+	mlx_string_put(screen.mlx_ptr, screen.win_ptr, 10, 20, 0x228b22, \
+		"[MODE] 1(Light ON & OFF) | 2(Anti-aliasing)");
+	mlx_string_put(screen.mlx_ptr, screen.win_ptr, 10, 50, 0x228b22, \
+		"[MOVE] W(forward) | S(backward) | A(left) | D(right) | Q(up) | R(down)");
 	mlx_hook(screen.win_ptr, 2, 0, key_hook, &scene);
 	mlx_loop(screen.mlx_ptr);
 	exit(EXIT_SUCCESS);
@@ -49,6 +53,10 @@ int	key_hook(int keycode, t_scene *scene)
 //	camera_ratate(keycode, &scene->c);
 	render(scene, scene->screen);
 	mlx_put_image_to_window(scene->screen->mlx_ptr, scene->screen->win_ptr, scene->screen->img.ptr, 0, 0);
+	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 20, 0x228b22, \
+		"[MODE] 1(Light ON & OFF) | 2(Anti-aliasing)");
+	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 50, 0x228b22, \
+		"[MOVE] W(forward) | S(backward) | A(left) | D(right) | Q(up) | R(down)");
 	return (0);
 }
 
