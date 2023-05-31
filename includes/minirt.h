@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/31 14:54:07 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 22:11:13 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,29 @@
 # define RANDOM_C 12345
 # define RANDOM_M 2147483648
 
-# define SAMPLES 20
-
 # define SPEC_SHININESS 32
 # define SPEC_STRENGTH 0.5
 # define LUMEN 1
+
+# define ON 1
+# define OFF 0
+
+// W
+# define FORWARD 13
+// S
+# define BACKWARD 1
+// A
+# define LEFT 0
+// D
+# define RIGHT 2
+// Q
+# define UP 12
+// E
+# define DOWN 14
+// 1
+# define LIGHT 18
+// 2
+# define AA 19
 
 enum e_type
 {
@@ -75,6 +93,9 @@ typedef struct s_camera
 	t_vec3		vertical;
 	double		focal_length;
 	t_point3	lower_left_corner;
+	t_vec3		w;
+	t_vec3		u;
+	t_vec3		v;
 }	t_camera;
 
 typedef struct s_light
@@ -114,14 +135,6 @@ typedef struct s_cylinder
 	t_color3		color;
 }	t_cylinder;
 
-typedef struct s_scene
-{
-	t_ambient		a;
-	t_camera		c;
-	t_light			*l_lst;
-	t_generic_lst	*obj_lst;
-}	t_scene;
-
 typedef struct s_img {
 	void	*ptr;
 	char	*addr;
@@ -129,13 +142,6 @@ typedef struct s_img {
 	int		line_size;
 	int		endian;
 }	t_img;
-
-typedef struct s_screen
-{
-	void	*mlx_ptr;
-	void	*win_ptr;
-	t_img	img;
-}	t_screen;
 
 typedef struct s_ray
 {
@@ -151,6 +157,25 @@ typedef struct s_hit_record
 	bool		front_face;
 	t_color3	color;
 }	t_hit_record;
+
+typedef struct s_screen
+{
+	void	*mlx_ptr;
+	void	*win_ptr;
+	t_img	img;
+}	t_screen;
+
+
+typedef struct s_scene
+{
+	t_ambient		a;
+	t_camera		c;
+	t_light			*l_lst;
+	t_generic_lst	*obj_lst;
+	t_screen		*screen;
+	int				samples;
+	bool			lighting;
+}	t_scene;
 
 // main.c
 void	init(t_screen *screen);
@@ -188,7 +213,7 @@ int 		validate_argument(char *line);
 
 // render.c
 void	render(t_scene *scene, t_screen *screen);
-int		write_color(t_color3 color);
+int		write_color(t_color3 color, double samples);
 void	cam_init(t_scene *scene);
 
 // ray.c
@@ -205,5 +230,11 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 t_color3	phong_lighting(t_scene *scene, t_hit_record rec, t_ray ray);
 t_color3	point_light(t_generic_lst *obj, t_light light, t_hit_record rec, t_ray ray);
 bool		in_shadow(t_generic_lst *obj, t_point3 origin, t_vec3 direction);
+
+// key_hook.c
+
+int		key_hook(int keycode, t_scene *scene);
+void	camera_move(int keycode, t_camera *camera);
+void	mode(int keycode, t_scene *scene);
 
 #endif

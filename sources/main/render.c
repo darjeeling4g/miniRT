@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/31 16:01:35 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 22:08:49 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void	render(t_scene *scene, t_screen *screen)
 		x = 0;
 		while (x < WIDTH)
 		{
-			i = 0;
 			color = color3(0.0, 0.0, 0.0);
-			while (i < SAMPLES)
+			i = 0;
+			while (i < scene->samples)
 			{
 				u = (double)(x + random_double(i)) / (WIDTH - 1);
 				v = (double)(HEIGHT - y - 1 + random_double(i)) / (HEIGHT - 1);
@@ -41,7 +41,7 @@ void	render(t_scene *scene, t_screen *screen)
 				color = vector_add(color, ray_color(scene, &ray));
 				i++;
 			}
-			*pixel = write_color(color);
+			*pixel = write_color(color, (double)scene->samples);
 			pixel = (int *)(screen->img.addr + (y * screen->img.line_size + \
 				(x * (screen->img.bits_per_pixel / 8))));
 			x++;
@@ -50,15 +50,15 @@ void	render(t_scene *scene, t_screen *screen)
 	}
 }
 
-int	write_color(t_color3 color)
+int	write_color(t_color3 color, double samples)
 {
 	int res;
 	int tmp[3];
 
 	res = 0x0;
-	tmp[0] = clamp(color.x / SAMPLES, 0.0, 1.0) * 255.0;
-	tmp[1] = clamp(color.y / SAMPLES, 0.0, 1.0) * 255.0;
-	tmp[2] = clamp(color.z / SAMPLES, 0.0, 1.0) * 255.0;
+	tmp[0] = clamp(color.x / samples, 0.0, 1.0) * 255.0;
+	tmp[1] = clamp(color.y / samples, 0.0, 1.0) * 255.0;
+	tmp[2] = clamp(color.z / samples, 0.0, 1.0) * 255.0;
 	res += tmp[0] << 16;
 	res += tmp[1] << 8;
 	res += tmp[2];
@@ -71,13 +71,9 @@ void	cam_init(t_scene *scene)
 	double	h;
 	double	aspect_ratio;
 
-	t_vec3	w;
-	t_vec3	u;
-	t_vec3	v;
-
-	w = unit_vector(scala_mul(scene->c.vec, -1));
-	u = unit_vector(cross(vec3(0.0, 1.0, 0.0), w));
-	v = cross(w, u);
+	scene->c.w = unit_vector(scala_mul(scene->c.vec, -1));
+	scene->c.u = unit_vector(cross(vec3(0.0, 1.0, 0.0), scene->c.w));
+	scene->c.v = cross(scene->c.w, scene->c.u);
 
 	scene->c.focal_length = 1.0;
 	aspect_ratio = WIDTH / HEIGHT;
@@ -85,8 +81,9 @@ void	cam_init(t_scene *scene)
 	h = tan(theta / 2.0) * scene->c.focal_length;
 	scene->c.viewport_w = 2.0 * h;
 	scene->c.viewport_h = scene->c.viewport_w / aspect_ratio;
-	scene->c.horizontal = scala_mul(u, scene->c.viewport_w);
-	scene->c.vertical = scala_mul(v, scene->c.viewport_h);
+	scene->c.horizontal = scala_mul(scene->c.u, scene->c.viewport_w);
+	scene->c.vertical = scala_mul(scene->c.v, scene->c.viewport_h);
 	scene->c.lower_left_corner = vector_sub(vector_sub(vector_sub(scene->c.coord, \
-		scala_div(scene->c.horizontal, 2)), scala_div(scene->c.vertical, 2)), w);
+		scala_div(scene->c.horizontal, 2)), scala_div(scene->c.vertical, 2)), \
+		scene->c.w);
 }

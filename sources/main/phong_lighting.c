@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 16:55:04 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/31 13:55:51 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 21:55:49 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,14 @@ t_color3	phong_lighting(t_scene *scene, t_hit_record rec, t_ray ray)
 	t_light		*light;
 
 	result = color3(0.0, 0.0, 0.0);
-	light = scene->l_lst;
-	while (light)
+	if (scene->lighting == true)
 	{
-		result = vector_add(result, point_light(scene->obj_lst, *light, rec, ray));
-		light = (t_light *)light->next;
+		light = scene->l_lst;
+		while (light)
+		{
+			result = vector_add(result, point_light(scene->obj_lst, *light, rec, ray));
+			light = (t_light *)light->next;
+		}
 	}
 	ambient = scala_mul(scene->a.color, scene->a.ratio);
 	result = vector_add(result, ambient);
