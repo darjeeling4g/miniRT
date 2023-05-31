@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 19:53:23 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 16:01:35 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,26 @@ int	write_color(t_color3 color)
 
 void	cam_init(t_scene *scene)
 {
-	double theta;
-	double h;
-	double aspect_ratio;
+	double	theta;
+	double	h;
+	double	aspect_ratio;
+
+	t_vec3	w;
+	t_vec3	u;
+	t_vec3	v;
+
+	w = unit_vector(scala_mul(scene->c.vec, -1));
+	u = unit_vector(cross(vec3(0.0, 1.0, 0.0), w));
+	v = cross(w, u);
 
 	scene->c.focal_length = 1.0;
 	aspect_ratio = WIDTH / HEIGHT;
 	theta = degrees_to_radians(scene->c.fov);
-	h = tan(theta / 2) * scene->c.focal_length;
+	h = tan(theta / 2.0) * scene->c.focal_length;
 	scene->c.viewport_w = 2.0 * h;
 	scene->c.viewport_h = scene->c.viewport_w / aspect_ratio;
-	scene->c.horizontal = vec3(scene->c.viewport_w, 0, 0);
-	scene->c.vertical = vec3(0, scene->c.viewport_h, 0);
+	scene->c.horizontal = scala_mul(u, scene->c.viewport_w);
+	scene->c.vertical = scala_mul(v, scene->c.viewport_h);
 	scene->c.lower_left_corner = vector_sub(vector_sub(vector_sub(scene->c.coord, \
-		scala_div(scene->c.horizontal, 2)), scala_div(scene->c.vertical, 2)), \
-		vec3(0, 0, scene->c.focal_length));
+		scala_div(scene->c.horizontal, 2)), scala_div(scene->c.vertical, 2)), w);
 }
