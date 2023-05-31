@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/31 14:07:26 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 14:54:07 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define RANDOM_C 12345
 # define RANDOM_M 2147483648
 
-# define SAMPLES 150
+# define SAMPLES 20
 
 # define SPEC_SHININESS 32
 # define SPEC_STRENGTH 0.5
