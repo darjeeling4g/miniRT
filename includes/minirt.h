@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 21:03:07 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 14:07:26 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@
 
 # define WIDTH 1600.0
 # define HEIGHT 900.0
-# define T_MIN 0.0
+# define EPSILON 1e-6
+# define T_MIN EPSILON
 # define T_MAX HUGE_VAL
 # define PI 3.1415926535897932385
 
@@ -41,7 +42,7 @@
 # define RANDOM_C 12345
 # define RANDOM_M 2147483648
 
-# define SAMPLES 1
+# define SAMPLES 150
 
 # define SPEC_SHININESS 32
 # define SPEC_STRENGTH 0.5
@@ -197,11 +198,12 @@ t_ray		get_ray(t_camera cam, double u, double v);
 
 // hit.c
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
-bool	hit_obj(t_generic_lst *obj, t_ray *ray, t_hit_record *rec);
+bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // phong_lighting.c
 t_color3	phong_lighting(t_scene *scene, t_hit_record rec, t_ray ray);
-t_color3	point_light(t_light light, t_hit_record rec, t_ray ray);
+t_color3	point_light(t_generic_lst *obj, t_light light, t_hit_record rec, t_ray ray);
+bool		in_shadow(t_generic_lst *obj, t_point3 origin, t_vec3 direction);
 
 #endif

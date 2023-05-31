@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:42:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 20:29:03 by siyang           ###   ########.fr       */
+/*   Updated: 2023/05/31 13:43:38 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_color3	ray_color(t_scene *scene, t_ray *ray)
 	t_vec3			unit_vec;
 	double			t;
 
-	if (hit_obj(scene->obj_lst, ray, &rec))
+	if (hit_obj(scene->obj_lst, ray, T_MAX, &rec))
 		return (phong_lighting(scene, rec, *ray));
 	unit_vec = unit_vector(ray->direction);
 	t = 0.5 * (unit_vec.y + 1.0);

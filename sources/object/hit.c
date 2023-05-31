@@ -7,7 +7,7 @@ void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_
 	// fp[2] = hit_cylinder;
 }
 
-bool	hit_obj(t_generic_lst *obj, t_ray *ray, t_hit_record *rec)
+bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	bool			(*hit[3])(t_generic_lst *, t_ray *, double, t_hit_record *);
 	bool			is_hit;
@@ -16,7 +16,7 @@ bool	hit_obj(t_generic_lst *obj, t_ray *ray, t_hit_record *rec)
 
 	init_hit(hit);
 	is_hit = false;
-	closest_so_far = T_MAX;
+	closest_so_far = t_max;
 	while (obj)
 	{
 		if (hit[obj->id](obj, ray, closest_so_far, &temp_rec))
