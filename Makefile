@@ -3,7 +3,7 @@
 # ---------------------------------------------------------------------------- #
 
 CC					:= cc
-CFLAGS				:= -Wall -Wextra -Werror
+CFLAGS				:= -Wall -Wextra -Werror -O2
 CPPFLAGS			= -I includes -I $(LIBFT_DIR)/includes -I $(MLX_DIR)
 LDFLAGS				= -L $(LIBFT_DIR) -L .
 LDLIBS				:= -l ft -l mlx

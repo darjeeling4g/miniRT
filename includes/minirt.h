@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/31 22:11:13 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 17:10:52 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,14 @@
 # define UP 12
 // E
 # define DOWN 14
+// up arrow
+# define TILT_UP 126
+// down arrow
+# define TILT_DOWN 125
+// left arrow
+# define PAN_LEFT 123
+// right arrow
+# define PAN_RIGHT 124
 // 1
 # define LIGHT 18
 // 2
@@ -232,9 +240,10 @@ t_color3	point_light(t_generic_lst *obj, t_light light, t_hit_record rec, t_ray 
 bool		in_shadow(t_generic_lst *obj, t_point3 origin, t_vec3 direction);
 
 // key_hook.c
-
 int		key_hook(int keycode, t_scene *scene);
 void	camera_move(int keycode, t_camera *camera);
+void	camera_rotation(int keycode, t_camera *camera);
 void	mode(int keycode, t_scene *scene);
+t_vec3	rodrigues_formula(t_vec3 vec, t_vec3 axis, double angle);
 
 #endif
