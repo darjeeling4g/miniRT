@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 17:45:08 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 18:42:59 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ typedef struct s_scene
 }	t_scene;
 
 // main.c
-void	init(t_screen *screen);
+void	init(t_scene *scene, t_screen *screen);
 void	render(t_scene *scene, t_screen *screen);
 
 // utils.c
@@ -227,15 +227,15 @@ void	render(t_scene *scene, t_screen *screen);
 int		write_color(t_color3 color, double samples);
 void	cam_init(t_scene *scene);
 
-// ray.c
-t_point3	ray_at(t_ray *ray, double t);
-t_color3	ray_color(t_scene *scene, t_ray *ray);
-t_ray		get_ray(t_camera cam, double u, double v);
-
 // hit.c
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+
+// ray.c
+t_point3	ray_at(t_ray *ray, double t);
+t_color3	ray_color(t_scene *scene, t_ray *ray);
+t_ray		get_ray(t_camera cam, double u, double v);
 
 // phong_lighting.c
 t_color3	phong_lighting(t_scene *scene, t_hit_record rec, t_ray ray);

@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 17:48:56 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 18:48:32 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	render(t_scene *scene, t_screen *screen)
 		x = 0;
 		while (x < WIDTH)
 		{
+			// anti-aliasing
 			color = color3(0.0, 0.0, 0.0);
 			i = 0;
 			while (i < scene->samples)
@@ -43,6 +44,8 @@ void	render(t_scene *scene, t_screen *screen)
 				color = vector_add(color, ray_color(scene, &ray));
 				i++;
 			}
+
+			// handle resolution
 			j = 0;
 			while (j < screen->resolution)
 			{
@@ -55,15 +58,24 @@ void	render(t_scene *scene, t_screen *screen)
 					k++;
 					x++;
 				}
-				j++;
 				x -= screen->resolution;
 				y--;
+				j++;
 			}
-			x += screen->resolution;
 			y += screen->resolution;
+
+			x += screen->resolution;
 		}
 		y -= screen->resolution;
 	}
+	mlx_put_image_to_window(scene->screen->mlx_ptr, scene->screen->win_ptr, \
+		scene->screen->img.ptr, 0, 0);
+	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 20, 0x228b22, \
+		"[MODE] 1(Light ON & OFF) | 2(Resolution High & Low) |3(Anti-aliasing)");
+	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 50, 0x228b22, \
+		"[MOVE] W(forward) | S(backward) | A(left) | D(right) | Q(up) | R(down)");
+	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 80, 0x228b22, \
+		"[ROTATION] Up(tilt-up) | Down(tilt-down) | Left(pan-left) | Right(pan-right)");
 }
 
 int	write_color(t_color3 color, double samples)
