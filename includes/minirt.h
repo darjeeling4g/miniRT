@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 17:10:52 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 17:45:08 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,9 @@
 // 1
 # define LIGHT 18
 // 2
-# define AA 19
+# define RESOLUTION 19
+// 3
+# define AA 20
 
 enum e_type
 {
@@ -171,6 +173,7 @@ typedef struct s_screen
 	void	*mlx_ptr;
 	void	*win_ptr;
 	t_img	img;
+	int		resolution;
 }	t_screen;
 
 

@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 17:11:56 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 17:56:23 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ int main(int argc, char *argv[])
 	render(&scene, &screen);
 	mlx_put_image_to_window(screen.mlx_ptr, screen.win_ptr, screen.img.ptr, 0, 0);
 	mlx_string_put(screen.mlx_ptr, screen.win_ptr, 10, 20, 0x228b22, \
-		"[MODE] 1(Light ON & OFF) | 2(Anti-aliasing)");
+		"[MODE] 1(Light ON & OFF) | 2(Resolution High & Low) | 3(Anti-aliasing)");
 	mlx_string_put(screen.mlx_ptr, screen.win_ptr, 10, 50, 0x228b22, \
 		"[MOVE] W(forward) | S(backward) | A(left) | D(right) | Q(up) | R(down)");
+	mlx_string_put(screen.mlx_ptr, screen.win_ptr, 10, 80, 0x228b22, \
+		"[ROTATION] Up(tilt-up) | Down(tilt-down) | Left(pan-left) | Right(pan-right)");
 	mlx_hook(screen.win_ptr, 2, 0, key_hook, &scene);
 	mlx_loop(screen.mlx_ptr);
 	exit(EXIT_SUCCESS);
@@ -44,6 +46,7 @@ void init(t_screen *screen)
 	screen->img.ptr = mlx_new_image(screen->mlx_ptr, WIDTH, HEIGHT);
 	screen->img.addr = mlx_get_data_addr(screen->img.ptr, \
 		&screen->img.bits_per_pixel, &screen->img.line_size, &screen->img.endian);
+	screen->resolution = 1;
 }
 
 int	key_hook(int keycode, t_scene *scene)
@@ -54,9 +57,11 @@ int	key_hook(int keycode, t_scene *scene)
 	render(scene, scene->screen);
 	mlx_put_image_to_window(scene->screen->mlx_ptr, scene->screen->win_ptr, scene->screen->img.ptr, 0, 0);
 	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 20, 0x228b22, \
-		"[MODE] 1(Light ON & OFF) | 2(Anti-aliasing)");
+		"[MODE] 1(Light ON & OFF) | 2(Resolution High & Low) |3(Anti-aliasing)");
 	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 50, 0x228b22, \
 		"[MOVE] W(forward) | S(backward) | A(left) | D(right) | Q(up) | R(down)");
+	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 80, 0x228b22, \
+		"[ROTATION] Up(tilt-up) | Down(tilt-down) | Left(pan-left) | Right(pan-right)");
 	return (0);
 }
 
@@ -68,6 +73,13 @@ void	mode(int keycode, t_scene *scene)
 			scene->lighting = false;
 		else
 			scene->lighting = true;
+	}
+	else if (keycode == RESOLUTION)
+	{
+		if (scene->screen->resolution == 1)
+			scene->screen->resolution = 20;
+		else
+			scene->screen->resolution = 1;
 	}
 	else if (keycode == AA)
 	{

@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/31 22:21:25 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 17:48:56 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	render(t_scene *scene, t_screen *screen)
 	int			x;
 	int			y;
 	int			i;
+	int			j;
+	int			k;
 	double		u;
 	double		v;
 	t_ray		ray;
@@ -41,12 +43,26 @@ void	render(t_scene *scene, t_screen *screen)
 				color = vector_add(color, ray_color(scene, &ray));
 				i++;
 			}
-			*pixel = write_color(color, (double)scene->samples);
-			pixel = (int *)(screen->img.addr + (y * screen->img.line_size + \
-				(x * (screen->img.bits_per_pixel / 8))));
-			x++;
+			j = 0;
+			while (j < screen->resolution)
+			{
+				k = 0;
+				while (k < screen->resolution)
+				{
+					*pixel = write_color(color, (double)scene->samples);
+					pixel = (int *)(screen->img.addr + (y * screen->img.line_size + \
+						(x * (screen->img.bits_per_pixel / 8))));
+					k++;
+					x++;
+				}
+				j++;
+				x -= screen->resolution;
+				y--;
+			}
+			x += screen->resolution;
+			y += screen->resolution;
 		}
-		y--;
+		y -= screen->resolution;
 	}
 }
 
