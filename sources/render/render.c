@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 18:48:32 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 23:29:32 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,56 +14,19 @@
 
 void	render(t_scene *scene, t_screen *screen)
 {
-	int			*pixel;
 	int			x;
 	int			y;
-	int			i;
-	int			j;
-	int			k;
-	double		u;
-	double		v;
-	t_ray		ray;
 	t_color3	color;
 
-	cam_init(scene);
-	pixel = (int *)screen->img.addr;
+	camera_init(&scene->c);
 	y = HEIGHT - 1;
 	while (y >= 0)
 	{
 		x = 0;
 		while (x < WIDTH)
 		{
-			// anti-aliasing
-			color = color3(0.0, 0.0, 0.0);
-			i = 0;
-			while (i < scene->samples)
-			{
-				u = (double)(x + random_double(i)) / (WIDTH - 1);
-				v = (double)(HEIGHT - y - 1 + random_double(i)) / (HEIGHT - 1);
-				ray = get_ray(scene->c, u, v);
-				color = vector_add(color, ray_color(scene, &ray));
-				i++;
-			}
-
-			// handle resolution
-			j = 0;
-			while (j < screen->resolution)
-			{
-				k = 0;
-				while (k < screen->resolution)
-				{
-					*pixel = write_color(color, (double)scene->samples);
-					pixel = (int *)(screen->img.addr + (y * screen->img.line_size + \
-						(x * (screen->img.bits_per_pixel / 8))));
-					k++;
-					x++;
-				}
-				x -= screen->resolution;
-				y--;
-				j++;
-			}
-			y += screen->resolution;
-
+			color = get_pixel_color(scene, x, y);
+			draw_pixel(screen, color, x, y);
 			x += screen->resolution;
 		}
 		y -= screen->resolution;
@@ -78,40 +41,83 @@ void	render(t_scene *scene, t_screen *screen)
 		"[ROTATION] Up(tilt-up) | Down(tilt-down) | Left(pan-left) | Right(pan-right)");
 }
 
-int	write_color(t_color3 color, double samples)
+t_color3	get_pixel_color(t_scene *scene, int x, int y)
+{
+	t_color3	color;
+	t_ray		ray;
+	int			i;
+	double		u;
+	double		v;
+
+	color = color3(0.0, 0.0, 0.0);
+	i = 0;
+	while (i < scene->samples)
+	{
+		u = (double)(x + random_double(i)) / (WIDTH - 1);
+		v = (double)(HEIGHT - y - 1 + random_double(i)) / (HEIGHT - 1);
+		ray = get_ray(scene->c, u, v);
+		color = vector_add(color, ray_color(scene, &ray));
+		i++;
+	}
+	color = scala_div(color, scene->samples);
+	return (color);
+}
+
+void	draw_pixel(t_screen *screen, t_color3 color, int x, int y)
+{
+	int	*pixel;
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < screen->resolution)
+	{
+		j = -1;
+		while (++j < screen->resolution)
+		{
+			pixel = (int *)(screen->img.addr + (y * screen->img.line_size + \
+				(x * (screen->img.bits_per_pixel / 8))));
+			*pixel = write_color(color);
+			x++;
+		}
+		x -= screen->resolution;
+		y--;
+	}
+}
+
+int	write_color(t_color3 color)
 {
 	int res;
 	int tmp[3];
 
 	res = 0x0;
-	tmp[0] = clamp(color.x / samples, 0.0, 1.0) * 255.0;
-	tmp[1] = clamp(color.y / samples, 0.0, 1.0) * 255.0;
-	tmp[2] = clamp(color.z / samples, 0.0, 1.0) * 255.0;
+	tmp[0] = clamp(color.x, 0.0, 1.0) * 255.0;
+	tmp[1] = clamp(color.y, 0.0, 1.0) * 255.0;
+	tmp[2] = clamp(color.z, 0.0, 1.0) * 255.0;
 	res += tmp[0] << 16;
 	res += tmp[1] << 8;
 	res += tmp[2];
 	return (res);
 }
 
-void	cam_init(t_scene *scene)
+void	camera_init(t_camera *camera)
 {
 	double	theta;
 	double	h;
 	double	aspect_ratio;
 
-	scene->c.w = unit_vector(scala_mul(scene->c.vec, -1));
-	scene->c.u = unit_vector(cross(vec3(0.0, 1.0, 0.0), scene->c.w));
-	scene->c.v = cross(scene->c.w, scene->c.u);
-
-	scene->c.focal_length = 1.0;
+	camera->w = unit_vector(scala_mul(camera->vec, -1));
+	camera->u = unit_vector(cross(vec3(0.0, 1.0, 0.0), camera->w));
+	camera->v = cross(camera->w, camera->u);
+	camera->focal_length = 1.0;
 	aspect_ratio = WIDTH / HEIGHT;
-	theta = degrees_to_radians(scene->c.fov);
-	h = tan(theta / 2.0) * scene->c.focal_length;
-	scene->c.viewport_w = 2.0 * h;
-	scene->c.viewport_h = scene->c.viewport_w / aspect_ratio;
-	scene->c.horizontal = scala_mul(scene->c.u, scene->c.viewport_w);
-	scene->c.vertical = scala_mul(scene->c.v, scene->c.viewport_h);
-	scene->c.lower_left_corner = vector_sub(vector_sub(vector_sub(scene->c.coord, \
-		scala_div(scene->c.horizontal, 2)), scala_div(scene->c.vertical, 2)), \
-		scene->c.w);
+	theta = degrees_to_radians(camera->fov);
+	h = tan(theta / 2.0) * camera->focal_length;
+	camera->viewport_w = 2.0 * h;
+	camera->viewport_h = camera->viewport_w / aspect_ratio;
+	camera->horizontal = scala_mul(camera->u, camera->viewport_w);
+	camera->vertical = scala_mul(camera->v, camera->viewport_h);
+	camera->lower_left_corner = vector_sub(vector_sub(vector_sub(camera->coord, \
+		scala_div(camera->horizontal, 2)), scala_div(camera->vertical, 2)), \
+		camera->w);
 }

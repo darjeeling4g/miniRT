@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 18:42:59 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/01 23:27:51 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,9 +223,11 @@ t_vec3		get_vector(char **line);
 int 		validate_argument(char *line);
 
 // render.c
-void	render(t_scene *scene, t_screen *screen);
-int		write_color(t_color3 color, double samples);
-void	cam_init(t_scene *scene);
+void		render(t_scene *scene, t_screen *screen);
+void		camera_init(t_camera *camera);
+t_color3	get_pixel_color(t_scene *scene, int x, int y);
+void		draw_pixel(t_screen *screen, t_color3 color, int x, int y);
+int			write_color(t_color3 color);
 
 // hit.c
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
