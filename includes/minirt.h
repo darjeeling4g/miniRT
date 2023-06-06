@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 23:27:51 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/06 10:51:36 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,13 +145,20 @@ typedef struct s_cylinder
 	t_color3		color;
 }	t_cylinder;
 
-typedef struct s_img {
+typedef struct s_img
+{
 	void	*ptr;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_size;
 	int		endian;
 }	t_img;
+
+typedef struct s_texture
+{
+	double		u;
+	double		v;
+}	t_texture;
 
 typedef struct s_ray
 {
@@ -233,6 +240,11 @@ int			write_color(t_color3 color);
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+
+// texture.c
+t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
+t_texture	get_spherical_map(t_point3 point);
+
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);

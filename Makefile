@@ -37,7 +37,7 @@ OBJ_DIR				:= obj
 
 SRCS				:= $(addprefix $(SRC_DIR)/$(MAIN_DIR)/, main.c utils.c ft_atof.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(PARSER_DIR)/, parser.c parser_utils.c)
-SRCS				+= $(addprefix $(SRC_DIR)/$(RENDER_DIR)/, render.c ray.c phong_lighting.c hit.c)
+SRCS				+= $(addprefix $(SRC_DIR)/$(RENDER_DIR)/, render.c ray.c phong_lighting.c hit.c texture.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(EVENT_DIR)/, key_hook.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(VECTOR_DIR)/, vector_utils.c)
 SRCS				+= $(addprefix $(SRC_DIR)/$(GENERIC_LST_DIR)/, generic_lst.c)

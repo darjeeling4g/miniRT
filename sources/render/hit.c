@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/01 18:43:23 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/06 10:51:58 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1);
 	}
-	rec->color = sphere->color;
+	rec->color = checker_mapping(get_spherical_map(rec->normal), sphere->color, 20, 10);
 	return (true);
 }
+
+
