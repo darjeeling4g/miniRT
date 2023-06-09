@@ -17,14 +17,17 @@ void	parser(int fd, t_scene *scene)
 	char	*line;
 	int		id;
 	void	(*fp[6])(t_scene *, char *);
+	int		check_overlap[3];
 
 	init_parser(fp);
-	while (1)
+	ft_bzero(check_overlap, sizeof(int) * 3);
+	while (true)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
 			return ;
 		id = scan_id(line);
+		validate_overlap(id, check_overlap);
 		if (id == ERROR)
 			error_exit("Parsing Error", 1);
 		else if (id < A)
@@ -75,7 +78,7 @@ void	a_parser(t_scene *scene, char *line)
 {
 	scene->a.ratio = get_float(&line);
 	if (scene->a.ratio < 0.0 || scene->a.ratio > 1.0)
-		error_exit("Pasing error", 1);
+		error_exit("Parsing error", 1);
 	scene->a.color = get_color(&line);
 }
 
@@ -96,7 +99,7 @@ void	l_parser(t_scene *scene, char *line)
 	light->coord = get_coordinate(&line);
 	light->ratio = get_float(&line);
 	if (scene->a.ratio < 0.0 || scene->a.ratio > 1.0)
-		error_exit("Pasing error", 1);
+		error_exit("Parsing error", 1);
 	light->color = get_color(&line);
 	light->next = NULL;
 	gl_lstadd_back((t_generic_lst **)&(scene->l_lst), (t_generic_lst *)light);

@@ -228,6 +228,7 @@ int			get_fov(char **line);
 t_point3	get_coordinate(char **line);
 t_vec3		get_vector(char **line);
 int 		validate_argument(char *line);
+void 		validate_overlap(int id, int *check_overlap);
 
 // render.c
 void		render(t_scene *scene, t_screen *screen);
@@ -240,11 +241,11 @@ int			write_color(t_color3 color);
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
 t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
 t_texture	get_spherical_map(t_point3 point);
-
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);

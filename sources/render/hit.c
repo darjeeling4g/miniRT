@@ -15,7 +15,7 @@
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec))
 {
 	fp[0] = hit_sphere;
-	// fp[1] = hit_plane;
+	fp[1] = hit_plane;
 	// fp[2] = hit_cylinder;
 }
 
@@ -82,10 +82,33 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	else
 	{
 		rec->front_face = false;
-		rec->normal = scala_mul(rec->normal, -1);
+		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
 	}
 	rec->color = checker_mapping(get_spherical_map(rec->normal), sphere->color, 20, 10);
 	return (true);
 }
 
+bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	t_plane		*plane;
+	double 		denom;
+	double		nom;
+
+	plane = (t_plane*)obj;
+	rec->normal = plane->vec;
+	denom = dot(rec->normal, ray->direction);
+	if (denom > T_MIN)
+	{
+		nom = dot(vector_sub(plane->coord, ray->origin), rec->normal);
+		rec->t = nom / denom;
+		rec->p = ray_at(ray, rec->t);
+		rec->front_face = true;
+		if (rec->t >= 0 && rec->t < t_max)
+		{
+			rec->color = plane->color;
+			return (true);
+		}
+	}
+	return (false);
+}
 
