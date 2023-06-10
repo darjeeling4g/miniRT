@@ -242,6 +242,7 @@ void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
 t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
