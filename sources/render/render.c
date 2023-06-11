@@ -53,7 +53,7 @@ t_color3	get_pixel_color(t_scene *scene, int x, int y)
 	i = 0;
 	while (i < scene->samples)
 	{
-		u = (double)(x + random_double(i)) / (WIDTH - 1);
+		u = (double)(x + random_double(i)) / (WIDTH - 1); // random_double의 반환값은 0~1사이인데, 그럼 x가 WIDTH-1의 값일 때 random_double의 반환값에 따라서 u의 값이 1을 넘어버릴 수 있는데???
 		v = (double)(HEIGHT - y - 1 + random_double(i)) / (HEIGHT - 1);
 		ray = get_ray(scene->c, u, v);
 		color = vector_add(color, ray_color(scene, &ray));

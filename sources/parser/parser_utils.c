@@ -141,3 +141,11 @@ int	validate_argument(char *line)
 	}
 	return (1);
 }
+
+void validate_overlap(int id, int *check_overlap) // checking whether A, C, L appear only once or not
+{
+	if (id >= 3 && !check_overlap[id - 3])
+		check_overlap[id - 3] = 1;
+	else if (id >= 3 && check_overlap[id - 3])
+		error_exit("Parsing Error", 1);
+}

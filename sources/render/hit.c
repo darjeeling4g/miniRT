@@ -15,8 +15,8 @@
 void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec))
 {
 	fp[0] = hit_sphere;
-	// fp[1] = hit_plane;
-	// fp[2] = hit_cylinder;
+	fp[1] = hit_plane;
+	fp[2] = hit_cylinder;
 }
 
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
@@ -82,10 +82,79 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	else
 	{
 		rec->front_face = false;
-		rec->normal = scala_mul(rec->normal, -1);
+		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
 	}
 	rec->color = checker_mapping(get_spherical_map(rec->normal), sphere->color, 20, 10);
 	return (true);
 }
 
+bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	t_plane		*plane;
+	double 		denom;
+	double		nom;
 
+	plane = (t_plane*)obj;
+	rec->normal = plane->vec;
+	denom = dot(rec->normal, ray->direction);
+	if (denom > T_MIN)
+	{
+		nom = dot(vector_sub(plane->coord, ray->origin), rec->normal);
+		rec->t = nom / denom;
+		rec->p = ray_at(ray, rec->t);
+		rec->front_face = true;
+		if (rec->t >= 0 && rec->t < t_max)
+		{
+			rec->color = plane->color;
+			return (true);
+		}
+	}
+	return (false);
+}
+
+bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	t_cylinder	*cylinder;
+	double		a;
+	double		b;
+	double		c;
+	double		discriminant;
+	double		sqrtd;
+	double		root;
+	t_vec3		axis_vec;
+
+	cylinder = (t_cylinder*)obj;
+	axis_vec = cylinder->vec;
+	a = powf(dot(ray->direction, axis_vec), 2.0) - dot(ray->direction, ray->direction);
+	b = dot(ray->direction, axis_vec) * dot(ray->origin, axis_vec) - dot(ray->origin, ray->direction);
+	c = powf((cylinder->diameter / 2), 2.0) - dot(ray->origin, ray->origin) + powf(dot(ray->origin, axis_vec), 2.0);
+
+	discriminant = b*b - 4*a*c;
+	if (discriminant < 0.0)
+		return (false);
+	sqrtd = sqrt(discriminant);
+
+	root = (-b - sqrtd) / (2.0 * a);
+	if (root < T_MIN || root > t_max)
+	{
+		root = (-b + sqrtd) / (2.0 * a);
+		if (root < T_MIN || root > t_max)
+			return (false);
+	}
+	rec->t = root;
+	if (dot(vector_add(ray->origin, scala_mul(ray->direction, rec->t)), axis_vec) < 0.0 || \
+	dot(vector_add(ray->origin, scala_mul(ray->direction, rec->t)), axis_vec) > cylinder->height)
+		return (false);
+
+	rec->p = ray_at(ray, rec->t);
+	rec->normal = unit_vector(cross(axis_vec, rec->p));
+	if (dot(ray->direction, rec->normal) < 0.0)
+		rec->front_face = true;
+	else
+	{
+		rec->front_face = false;
+		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
+	}
+	rec->color = cylinder->color;
+	return (true);
+}
