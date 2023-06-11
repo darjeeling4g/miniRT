@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/06 10:51:36 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/06 11:31:10 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,6 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 // texture.c
 t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
 t_texture	get_spherical_map(t_point3 point);
-
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);
