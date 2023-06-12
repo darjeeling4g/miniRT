@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 22:24:34 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/12 16:15:19 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	parser(int fd, t_scene *scene)
 {
 	char	*line;
 	int		id;
-	void	(*fp[6])(t_scene *, char *);
+	void	(*fp[7])(t_scene *, char *);
 	int		check_overlap[3];
 
 	init_parser(fp);
@@ -38,14 +38,15 @@ void	parser(int fd, t_scene *scene)
 	}
 }
 
-void	init_parser(void (*fp[6])(t_scene *, char *))
+void	init_parser(void (*fp[7])(t_scene *, char *))
 {
 	fp[0] = sp_parser;
 	fp[1] = pl_parser;
 	fp[2] = cy_parser;
-	fp[3] = a_parser;
-	fp[4] = c_parser;
-	fp[5] = l_parser;
+	fp[3] = to_parser;
+	fp[4] = a_parser;
+	fp[5] = c_parser;
+	fp[6] = l_parser;
 }
 
 int	scan_id(char *str)
@@ -70,6 +71,8 @@ int	scan_id(char *str)
 			id = PL;
 		else if (!ft_strncmp(str, "cy", 2))
 			id = CY;
+		else if (!ft_strncmp(str, "to", 2))
+			id = TO;
 	}
 	return (id);
 }
@@ -150,4 +153,21 @@ void	cy_parser(t_scene *scene, char *line)
 	cy->next = NULL;
 	cy->id = CY;
 	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)cy);
+}
+
+void	to_parser(t_scene *scene, char *line)
+{
+	t_torus	*to;
+
+	to = (t_torus *)malloc(sizeof(t_torus));
+	if (!to)
+		exit(EXIT_FAILURE);
+	to->coord = get_coordinate(&line);
+	to->vec = get_vector(&line);
+	to->distance = get_float(&line);
+	to->radius = get_float(&line);
+	to->color = get_color(&line);
+	to->next = NULL;
+	to->id = TO;
+	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)to);
 }
