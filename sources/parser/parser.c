@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/12 16:15:19 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/15 21:52:45 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void	cy_parser(t_scene *scene, char *line)
 	if (!cy)
 		exit(EXIT_FAILURE);
 	cy->coord = get_coordinate(&line);
-	cy->vec = get_vector(&line);
+	cy->vec = unit_vector(get_vector(&line));
 	cy->diameter = get_float(&line);
 	cy->height = get_float(&line);
 	cy->color = get_color(&line);

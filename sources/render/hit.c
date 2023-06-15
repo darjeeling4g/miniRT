@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/12 21:01:25 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/16 02:28:04 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	init_hit(bool (*fp[4])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_
 	fp[0] = hit_sphere;
 	fp[1] = hit_plane;
 	fp[2] = hit_cylinder;
-	fp[3] = hit_torus;
+//	fp[3] = hit_torus;
 }
 
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
@@ -100,7 +100,7 @@ bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	if (dot(rec->normal, ray->direction) > 0.0)
 		rec->normal = scala_mul(rec->normal, -1);
 	denom = dot(rec->normal, ray->direction);
-	if (fabs(denom) > T_MIN)
+	if (fabs(denom) > EPSILON)
 	{
 		nom = dot(vector_sub(plane->coord, ray->origin), rec->normal);
 		rec->t = nom / denom;
@@ -115,45 +115,106 @@ bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	return (false);
 }
 
-bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+double	hit_cylinder_base(t_cylinder *cylinder, t_ray *ray, double t_max, bool is_top)
 {
-	t_cylinder	*cylinder;
+	t_point3	c;
+	double		r;
+	double		denom;
+	double		t;
+
+	if (is_top == true)
+		c = vector_add(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0));
+	else
+		c = vector_sub(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0));
+	denom = dot(ray->direction, cylinder->vec);
+	if (fabs(denom) < EPSILON)
+		return (-1);
+	t = dot(vector_sub(c, ray->origin), cylinder->vec) / denom;
+	if (t < T_MIN || t > t_max)
+		return (-1);
+	r = length(vector_sub(ray_at(ray, t), c));
+	if (r > cylinder->diameter / 2.0)
+		return (-1);
+	return (t);
+}
+
+double	hit_cylinder_surface(t_cylinder *cylinder, t_ray *ray, double t_max)
+{
 	double		a;
 	double		b;
 	double		c;
 	double		discriminant;
 	double		sqrtd;
 	double		root;
-	t_vec3		axis_vec;
+	t_point3	p;
 	t_vec3		ce;
+	t_vec3		cp;
 
-	cylinder = (t_cylinder*)obj;
-	axis_vec = unit_vector(cylinder->vec);
-	ce = vector_sub(ray->origin, vector_add(cylinder->coord, scala_mul(scala_div(scala_mul(axis_vec, cylinder->height), 2.0), -1)));
-	a = powf(dot(ray->direction, axis_vec), 2.0) - dot(ray->direction, ray->direction);
-	b = dot(ray->direction, axis_vec) * dot(ce, axis_vec) - dot(ce, ray->direction);
-	c = powf((cylinder->diameter / 2), 2.0) - dot(ce, ce) + powf(dot(ce, axis_vec), 2.0);
+	ce = vector_sub(ray->origin, vector_sub(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0)));
+	a = dot(ray->direction, ray->direction) - pow(dot(ray->direction, cylinder->vec), 2.0);
+	b = 2.0 * (dot(ce, ray->direction) - dot(ray->direction, cylinder->vec) * dot(ce, cylinder->vec));
+	c = dot(ce, ce) - pow(dot(ce, cylinder->vec), 2.0) - pow((cylinder->diameter / 2.0), 2.0);
 	
-	discriminant = b*b - 4*a*c;
-	if (discriminant < 0.0)
-		return (false);
+	discriminant = b * b - 4.0 * a * c;
+	if (discriminant < EPSILON)
+		return (-1);
 	sqrtd = sqrt(discriminant);
-
 	root = (-b - sqrtd) / (2.0 * a);
 	if (root < T_MIN || root > t_max)
 	{
 		root = (-b + sqrtd) / (2.0 * a);
 		if (root < T_MIN || root > t_max)
-			return (false);
+			return (-1);
 	}
-	rec->t = root;
+	p = ray_at(ray, root);
+	cp = vector_sub(p, vector_sub(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0)));
+	if (dot(cp, cylinder->vec) < 0.0 || dot(cp, cylinder->vec) > cylinder->height)
+		return (-1);
+	return (root);
+}
 
-	// if (dot(vector_add(ray->origin, scala_mul(ray->direction, rec->t)), axis_vec) < 0.0 || \
-	// dot(vector_add(ray->origin, scala_mul(ray->direction, rec->t)), axis_vec) > cylinder->height)
-	// 	return (false);
+bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	t_cylinder	*cylinder;
+	double		surface;
+	double		top;
+	double		bottom;
+	t_vec3		cp;
 
+	cylinder = (t_cylinder *)obj;
+	surface = hit_cylinder_surface(cylinder, ray, t_max);
+	top = hit_cylinder_base(cylinder, ray, t_max, true);
+	bottom = hit_cylinder_base(cylinder, ray, t_max, false);
+
+	if (surface == -1 && top == -1 && bottom == -1)
+		return (false);
+	else if (surface == -1)
+	{
+		rec->t = top;
+		if (top == -1)
+			rec->t = bottom;
+		else if (bottom != -1 && top > bottom)
+			rec->t = bottom;
+	}
+	else
+	{
+		rec->t =surface;
+		if (top != -1 && top < surface)
+			rec->t = top;
+		else if (bottom != -1 && bottom < surface)
+			rec->t = bottom;
+	}
 	rec->p = ray_at(ray, rec->t);
-	rec->normal = unit_vector(cross(axis_vec, rec->p));
+	if (rec->t == surface)
+	{
+		cp = vector_sub(rec->p, vector_sub(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0)));
+		rec->normal = unit_vector(vector_sub(cp, scala_mul(cylinder->vec, dot(cp, cylinder->vec))));
+	}
+	else if (rec->t == top)
+		rec->normal = unit_vector(cylinder->vec);
+	else if (rec->t == bottom)
+		rec->normal = scala_mul(unit_vector(cylinder->vec), -1);
+
 	if (dot(ray->direction, rec->normal) < 0.0)
 		rec->front_face = true;
 	else
@@ -162,53 +223,5 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 		rec->normal = scala_mul(rec->normal, -1);
 	}
 	rec->color = cylinder->color;
-	return (true);
-}
-
-bool	hit_torus(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
-{
-	t_torus	*torus;
-	double	a;
-	double	b;
-	double	c;
-	double	discriminant;
-	double	sqrtd;
-	double	root;
-
-	torus = (t_torus *)obj;
-	a = ray->direction.x * ray->direction.x + \
-		ray->direction.y * ray->direction.y + \
-		ray->direction.z * ray->direction.z;
-	b = 2 * (ray->direction.x * ray->origin.x + \
-			ray->direction.y * ray->origin.y + \
-			ray->direction.z * ray->origin.z);
-	c = ray->origin.x * ray->origin.x + \
-		ray->origin.y * ray->origin.y + \
-		ray->origin.z * ray->origin.z + \
-		torus->distance * torus->distance - \
-		torus->radius * torus->radius;
-	discriminant = b * b - 4.0 * a * c;
-	if (discriminant < 0.0)
-		return (false);
-	sqrtd = sqrt(discriminant);
-
-	root = (-b - sqrtd) / (2.0 * a);
-	if (root < T_MIN || root > t_max)
-	{
-		root = (-b + sqrtd) / (2.0 * a);
-		if (root < T_MIN || root > t_max)
-			return (false);
-	}
-	rec->t = root;
-	rec->p = ray_at(ray, rec->t);
-	rec->normal = scala_div(vector_sub(rec->p, torus->coord), torus->radius);
-	if (dot(ray->direction, rec->normal) < 0.0)
-		rec->front_face = true;
-	else
-	{
-		rec->front_face = false;
-		rec->normal = scala_mul(rec->normal, -1);
-	}
-	rec->color = torus->color;
 	return (true);
 }
