@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/17 22:18:42 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/17 23:16:02 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,9 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
 	}
-	rec->color = checker_mapping(get_spherical_map(rec->normal), sphere->color, 20, 10);
+	rec->normal = unit_vector(vector_add(rec->normal, bump_mapping(get_spherical_map(rec->normal), 1000, 1000)));
+//	rec->color = checker_mapping(get_spherical_map(rec->normal), sphere->color, 20, 10);
+	rec->color = sphere->color;
 	return (true);
 }
 
@@ -236,22 +238,23 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	double		discriminant;
 	double		sqrtd;
 	double		root;
+	double		cosine;
+	double		cp;
+
+	(void)rec;
 
 	cone = (t_cone *)obj;
+	cosine = cos(atan2(cone->height, cone->diameter / 2));
 	vertex = vector_add(cone->base_center, scala_mul(unit_vector(cone->vec), cone->height));
 	a = powf(dot(ray->direction, unit_vector(cone->vec)), 2.0) - dot(ray->direction, ray->direction) \
-	* powf(dot(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root)), cone->vec) \
-	/ (length(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root))) * 1), 2.0);
+	* powf(cosine, 2.0);
 
 	b = 2 * dot(ray->direction, cone->vec) * dot(vector_sub(ray->origin, vertex), cone->vec) \
-	- 2 * dot(vector_sub(ray->origin, vertex), ray->direction) \
-	* powf(dot(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root)), cone->vec) \
-	/ (length(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root))) * 1), 2.0);
+	- 2 * dot(vector_sub(ray->origin, vertex), ray->direction) * powf(cosine, 2.0);
 
 	c = powf(dot(vector_sub(ray->origin, vertex), cone->vec), 2.0) \
 	- dot(vector_sub(ray->origin, vertex), vector_sub(ray->origin, vertex)) \
-	* powf(dot(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root)), cone->vec) \
-	/ (length(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root))) * 1), 2.0);
+	* powf(cosine, 2.0);
 
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0.0)
@@ -265,11 +268,18 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		if (root < T_MIN || root > t_max)
 			return (false);
 	}
-	
 
-
-	
-	
-
-
+	rec->t = root;
+	rec->p = ray_at(ray, rec->t);
+	cp = vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, rec->t));
+//	rec->normal = scala_div(vector_sub(rec->p, sphere->coord), sphere->radius);
+	if (dot(ray->direction, rec->normal) < 0.0)
+		rec->front_face = true;
+	else
+	{
+		rec->front_face = false;
+		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
+	}
+	rec->color = cone->color;
+	return (true);	
 }

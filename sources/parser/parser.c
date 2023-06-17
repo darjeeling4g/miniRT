@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/17 22:16:52 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/17 22:28:42 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,8 @@ void	cy_parser(t_scene *scene, char *line)
 void	co_parser(t_scene *scene, char *line)
 {
 	t_cone	*co;
+
+	(void)line;
 
 	co = (t_cone *)malloc(sizeof(t_cone));
 	if (!co)
