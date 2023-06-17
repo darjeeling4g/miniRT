@@ -71,8 +71,8 @@ int	scan_id(char *str)
 			id = PL;
 		else if (!ft_strncmp(str, "cy", 2))
 			id = CY;
-		else if (!ft_strncmp(str, "to", 2))
-			id = TO;
+		else if (!ft_strncmp(str, "co", 2))
+			id = CO;
 	}
 	return (id);
 }
@@ -159,10 +159,19 @@ void	co_parser(t_scene *scene, char *line)
 {
 	t_cone	*co;
 
-	(void)line;
-
 	co = (t_cone *)malloc(sizeof(t_cone));
 	if (!co)
+	{
+		// printf("dsadsadsda\n");
 		exit(EXIT_FAILURE);
+		// printf("dsadsadsda\n");
+	}
+	co->base_center = get_coordinate(&line);
+	co->vec = unit_vector(get_vector(&line));
+	co->diameter = get_float(&line);
+	co->height = get_float(&line);
+	co->color = get_color(&line);
+	co->next = NULL;
+	co->id = CO;
 	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)co);
 }

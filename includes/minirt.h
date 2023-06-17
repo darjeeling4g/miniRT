@@ -81,7 +81,7 @@ enum e_type
 	SP,
 	PL,
 	CY,
-	TO,
+	CO,
 	A,
 	C,
 	L

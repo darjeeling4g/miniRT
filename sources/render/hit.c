@@ -17,7 +17,7 @@ void	init_hit(bool (*fp[4])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_
 	fp[0] = hit_sphere;
 	fp[1] = hit_plane;
 	fp[2] = hit_cylinder;
-//	fp[3] = hit_torus;
+	fp[3] = hit_cone;
 }
 
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
@@ -239,14 +239,12 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	double		sqrtd;
 	double		root;
 	double		cosine;
-	double		cp;
-
-	(void)rec;
+	t_vec3		cp;
 
 	cone = (t_cone *)obj;
-	cosine = cos(atan2(cone->height, cone->diameter / 2));
-	vertex = vector_add(cone->base_center, scala_mul(unit_vector(cone->vec), cone->height));
-	a = powf(dot(ray->direction, unit_vector(cone->vec)), 2.0) - dot(ray->direction, ray->direction) \
+	cosine = cos(atan2(cone->height, cone->diameter / 2.0));
+	vertex = vector_add(cone->base_center, scala_mul(cone->vec, cone->height));
+	a = powf(dot(ray->direction, cone->vec), 2.0) - dot(ray->direction, ray->direction) \
 	* powf(cosine, 2.0);
 
 	b = 2 * dot(ray->direction, cone->vec) * dot(vector_sub(ray->origin, vertex), cone->vec) \
@@ -261,6 +259,8 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		return (false);
 	sqrtd = sqrt(discriminant);
 
+	if (sqrtd < 0.0)
+		sqrtd *= -1.0;
 	root = (-b - sqrtd) / (2.0 * a);
 	if (root < T_MIN || root > t_max)
 	{
@@ -272,14 +272,19 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	rec->t = root;
 	rec->p = ray_at(ray, rec->t);
 	cp = vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, rec->t));
-//	rec->normal = scala_div(vector_sub(rec->p, sphere->coord), sphere->radius);
+	rec->normal = unit_vector(cross(cross(cp, cone->vec), cp));
+
+	if (dot(unit_vector(cp), cone->vec) > cone->height || \
+	dot(unit_vector(cp), cone->vec) < 0.0)
+		return (false);
+
 	if (dot(ray->direction, rec->normal) < 0.0)
 		rec->front_face = true;
 	else
 	{
 		rec->front_face = false;
-		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
+		rec->normal = scala_mul(rec->normal, -1);
 	}
 	rec->color = cone->color;
-	return (true);	
+	return (true);
 }
