@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/06 10:51:36 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/17 22:39:23 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ enum e_type
 	SP,
 	PL,
 	CY,
+	CO,
 	A,
 	C,
 	L
@@ -145,6 +146,17 @@ typedef struct s_cylinder
 	t_color3		color;
 }	t_cylinder;
 
+typedef struct s_cone
+{
+	t_generic_lst	*next;
+	int				id;
+	t_point3		base_center;
+	t_vec3			vec;
+	double			diameter;
+	double			height;
+	t_color3		color;
+}	t_cone;
+
 typedef struct s_img
 {
 	void	*ptr;
@@ -183,7 +195,6 @@ typedef struct s_screen
 	int		resolution;
 }	t_screen;
 
-
 typedef struct s_scene
 {
 	t_ambient		a;
@@ -212,7 +223,7 @@ double	make_double(const char *str, int *len);
 
 // parser.c
 void	parser(int fd, t_scene *scene);
-void	init_parser(void (*fp[6])(t_scene *, char *));
+void	init_parser(void (*fp[7])(t_scene *, char *));
 int		scan_id(char *str);
 void	a_parser(t_scene *scene, char *line);
 void	c_parser(t_scene *scene, char *line);
@@ -220,6 +231,7 @@ void	l_parser(t_scene *scene, char *line);
 void	sp_parser(t_scene *scene, char *line);
 void	pl_parser(t_scene *scene, char *line);
 void	cy_parser(t_scene *scene, char *line);
+void	co_parser(t_scene *scene, char *line);
 
 // parser_utils.c
 double		get_float(char **line);
@@ -238,15 +250,20 @@ void		draw_pixel(t_screen *screen, t_color3 color, int x, int y);
 int			write_color(t_color3 color);
 
 // hit.c
-void	init_hit(bool (*fp[3])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
+void	init_hit(bool (*fp[4])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
 t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
 t_texture	get_spherical_map(t_point3 point);
+t_texture	get_planar_map(t_point3 point);
+t_texture	get_cylindrical_map(t_point3 point, double height);
+t_point3	calibrate_cylinder(t_cylinder *cylinder, t_point3 point);
+t_vec3		bump_mapping(t_texture t, int width, int height);
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);

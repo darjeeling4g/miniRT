@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:47 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/30 18:03:39 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/12 16:16:06 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,8 @@ int	validate_argument(char *line)
 
 void validate_overlap(int id, int *check_overlap) // checking whether A, C, L appear only once or not
 {
-	if (id >= 3 && !check_overlap[id - 3])
-		check_overlap[id - 3] = 1;
-	else if (id >= 3 && check_overlap[id - 3])
+	if (id >= 4 && !check_overlap[id - 4])
+		check_overlap[id - 4] = 1;
+	else if (id >= 4 && check_overlap[id - 4])
 		error_exit("Parsing Error", 1);
 }

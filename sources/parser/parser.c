@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 22:24:34 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/17 22:28:42 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	parser(int fd, t_scene *scene)
 {
 	char	*line;
 	int		id;
-	void	(*fp[6])(t_scene *, char *);
+	void	(*fp[7])(t_scene *, char *);
 	int		check_overlap[3];
 
 	init_parser(fp);
@@ -38,14 +38,15 @@ void	parser(int fd, t_scene *scene)
 	}
 }
 
-void	init_parser(void (*fp[6])(t_scene *, char *))
+void	init_parser(void (*fp[7])(t_scene *, char *))
 {
 	fp[0] = sp_parser;
 	fp[1] = pl_parser;
 	fp[2] = cy_parser;
-	fp[3] = a_parser;
-	fp[4] = c_parser;
-	fp[5] = l_parser;
+	fp[3] = co_parser;
+	fp[4] = a_parser;
+	fp[5] = c_parser;
+	fp[6] = l_parser;
 }
 
 int	scan_id(char *str)
@@ -70,6 +71,8 @@ int	scan_id(char *str)
 			id = PL;
 		else if (!ft_strncmp(str, "cy", 2))
 			id = CY;
+		else if (!ft_strncmp(str, "co", 2))
+			id = CO;
 	}
 	return (id);
 }
@@ -143,11 +146,32 @@ void	cy_parser(t_scene *scene, char *line)
 	if (!cy)
 		exit(EXIT_FAILURE);
 	cy->coord = get_coordinate(&line);
-	cy->vec = get_vector(&line);
+	cy->vec = unit_vector(get_vector(&line));
 	cy->diameter = get_float(&line);
 	cy->height = get_float(&line);
 	cy->color = get_color(&line);
 	cy->next = NULL;
 	cy->id = CY;
 	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)cy);
+}
+
+void	co_parser(t_scene *scene, char *line)
+{
+	t_cone	*co;
+
+	co = (t_cone *)malloc(sizeof(t_cone));
+	if (!co)
+	{
+		// printf("dsadsadsda\n");
+		exit(EXIT_FAILURE);
+		// printf("dsadsadsda\n");
+	}
+	co->base_center = get_coordinate(&line);
+	co->vec = unit_vector(get_vector(&line));
+	co->diameter = get_float(&line);
+	co->height = get_float(&line);
+	co->color = get_color(&line);
+	co->next = NULL;
+	co->id = CO;
+	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)co);
 }
