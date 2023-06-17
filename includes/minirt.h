@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/12 15:53:25 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/17 22:17:48 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,16 +146,16 @@ typedef struct s_cylinder
 	t_color3		color;
 }	t_cylinder;
 
-typedef struct s_torus
+typedef struct s_cone
 {
 	t_generic_lst	*next;
 	int				id;
-	t_point3		coord;
+	t_point3		base_center;
 	t_vec3			vec;
-	double			distance;
-	double			radius;
+	double			diameter;
+	double			height;
 	t_color3		color;
-}	t_torus;
+}	t_cone;
 
 typedef struct s_img
 {
@@ -195,7 +195,6 @@ typedef struct s_screen
 	int		resolution;
 }	t_screen;
 
-
 typedef struct s_scene
 {
 	t_ambient		a;
@@ -232,7 +231,7 @@ void	l_parser(t_scene *scene, char *line);
 void	sp_parser(t_scene *scene, char *line);
 void	pl_parser(t_scene *scene, char *line);
 void	cy_parser(t_scene *scene, char *line);
-void	to_parser(t_scene *scene, char *line);
+void	co_parser(t_scene *scene, char *line);
 
 // parser_utils.c
 double		get_float(char **line);
@@ -256,11 +255,14 @@ bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
-bool	hit_torus(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
 t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
 t_texture	get_spherical_map(t_point3 point);
+t_texture	get_planar_map(t_point3 point);
+t_texture	get_cylindrical_map(t_point3 point, double height);
+t_point3	calibrate_cylinder(t_cylinder *cylinder, t_point3 point);
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);

@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/16 02:28:04 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/17 22:18:42 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->front_face = true;
 		if (rec->t > T_MIN && rec->t < t_max)
 		{
-			rec->color = plane->color;
+			rec->color = checker_mapping(get_planar_map(rec->p), plane->color, 2, 2);
 			return (true);
 		}
 	}
@@ -222,6 +222,54 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1);
 	}
-	rec->color = cylinder->color;
+	rec->color = checker_mapping(get_cylindrical_map(calibrate_cylinder(cylinder, rec->p), cylinder->height), cylinder->color, cylinder->diameter * 4, cylinder->height);
 	return (true);
+}
+
+bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+{
+	t_cone		*cone;
+	double		a;
+	double		b;
+	double		c;
+	t_point3	vertex;
+	double		discriminant;
+	double		sqrtd;
+	double		root;
+
+	cone = (t_cone *)obj;
+	vertex = vector_add(cone->base_center, scala_mul(unit_vector(cone->vec), cone->height));
+	a = powf(dot(ray->direction, unit_vector(cone->vec)), 2.0) - dot(ray->direction, ray->direction) \
+	* powf(dot(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root)), cone->vec) \
+	/ (length(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root))) * 1), 2.0);
+
+	b = 2 * dot(ray->direction, cone->vec) * dot(vector_sub(ray->origin, vertex), cone->vec) \
+	- 2 * dot(vector_sub(ray->origin, vertex), ray->direction) \
+	* powf(dot(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root)), cone->vec) \
+	/ (length(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root))) * 1), 2.0);
+
+	c = powf(dot(vector_sub(ray->origin, vertex), cone->vec), 2.0) \
+	- dot(vector_sub(ray->origin, vertex), vector_sub(ray->origin, vertex)) \
+	* powf(dot(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root)), cone->vec) \
+	/ (length(vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, root))) * 1), 2.0);
+
+	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0.0)
+		return (false);
+	sqrtd = sqrt(discriminant);
+
+	root = (-b - sqrtd) / (2.0 * a);
+	if (root < T_MIN || root > t_max)
+	{
+		root = (-b + sqrtd) / (2.0 * a);
+		if (root < T_MIN || root > t_max)
+			return (false);
+	}
+	
+
+
+	
+	
+
+
 }
