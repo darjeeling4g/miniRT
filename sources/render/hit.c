@@ -57,7 +57,6 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	double		sqrtd;
 	double		root;
 
-	// 추후 최적화 예정 (짝수공식으로)
 	sphere = (t_sphere *)obj;
 	a = dot(ray->direction, ray->direction);
 	b = 2.0 * dot(vector_sub(ray->origin, sphere->coord), ray->direction);
@@ -75,7 +74,10 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		if (root < T_MIN || root > t_max)
 			return (false);
 	}
-	rec->t = root;
+	// rec->t = get_root(a, b, c, t_max);
+	// if (rec->t == -1)
+		// return (false);
+	// rec->t = root;
 	rec->p = ray_at(ray, rec->t);
 	rec->normal = scala_div(vector_sub(rec->p, sphere->coord), sphere->radius);
 	if (dot(ray->direction, rec->normal) < 0.0)
@@ -237,50 +239,36 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	double		b;
 	double		c;
 	t_point3	vertex;
-	double		discriminant;
-	double		sqrtd;
-	double		root;
 	double		cosine;
 	t_vec3		cp;
 	double		base;
 
 	cone = (t_cone *)obj;
 	base = hit_cone_base(cone, ray, t_max, rec);
-	if (base != -1)
-		return (true);
-
 	cosine = cos(atan2(cone->diameter / 2.0, cone->height));
 	vertex = vector_sub(cone->base_center, scala_mul(cone->vec, cone->height));
 
 	a = dot(ray->direction, ray->direction) * pow(cosine, 2.0) - pow(dot(ray->direction, cone->vec), 2.0);
-
+	
 	b = 2 * dot(vector_sub(ray->origin, vertex), ray->direction) * pow(cosine, 2.0) \
 	- 2 * dot(ray->direction, cone->vec) * dot(vector_sub(ray->origin, vertex), cone->vec);
-
+	
 	c = dot(vector_sub(ray->origin, vertex), vector_sub(ray->origin, vertex)) \
 	* pow(cosine, 2.0) - pow(dot(vector_sub(ray->origin, vertex), cone->vec), 2.0);
 
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0.0)
-		return (false);
-	sqrtd = sqrt(discriminant);
-
-	root = (-b - sqrtd) / (2.0 * a);
-	if (root < T_MIN || root > t_max)
-	{
-		root = (-b + sqrtd) / (2.0 * a);
-		if (root < T_MIN || root > t_max)
-			return (false);
-	}
-
-	rec->t = root;
-	rec->p = ray_at(ray, rec->t);
+	rec->t = get_root(a, b, c, t_max);
 	cp = vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, rec->t));
-	rec->normal = unit_vector(vector_sub(cp, scala_mul(cone->vec, length(cp) / cosine)));
-
 	if (dot(cp, cone->vec) > cone->height || dot(unit_vector(cp), cone->vec) < 0.0)
+		rec->t = -1;
+	if (rec->t == -1 && base == -1)
 		return (false);
-
+	else if (base != -1 && base < rec->t)
+	{
+		rec->t = base;
+		return (true);
+	}
+	rec->p = ray_at(ray, rec->t);
+	rec->normal = unit_vector(vector_sub(cp, scala_mul(cone->vec, length(cp) / cosine)));
 	if (dot(ray->direction, rec->normal) < 0.0)
 		rec->front_face = true;
 	else

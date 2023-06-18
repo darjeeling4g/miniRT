@@ -44,3 +44,5 @@ t_vec3	vector_clamp(t_vec3 vec, double min, double max)
 	vec.z = clamp(vec.z, min, max);
 	return (vec); // if getting vec as pointer then it might not need to return vec
 }
+
+
