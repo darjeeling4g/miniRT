@@ -256,6 +256,7 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+double	hit_cone_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
 t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
