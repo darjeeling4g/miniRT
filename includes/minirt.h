@@ -269,6 +269,9 @@ t_color3	get_pixel_color(t_scene *scene, int x, int y);
 void		draw_pixel(t_screen *screen, t_color3 color, int x, int y);
 int			write_color(t_color3 color);
 
+// render_utils.c
+double	get_root(double a, double b, double c, double t_max);
+
 // hit.c
 void	init_hit(bool (*fp[4])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
@@ -276,6 +279,7 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
+double	hit_cone_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
 void		texture_mapping(t_hit_record *rec, t_img *bump);
