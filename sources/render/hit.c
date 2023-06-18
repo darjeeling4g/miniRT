@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/18 21:19:46 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 22:24:21 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,31 +55,16 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	double		a;
 	double		b;
 	double		c;
-	double		discriminant;
-	double		sqrtd;
-	double		root;
 
 	sphere = (t_sphere *)obj;
 	a = dot(ray->direction, ray->direction);
 	b = 2.0 * dot(vector_sub(ray->origin, sphere->coord), ray->direction);
 	c = dot(vector_sub(ray->origin, sphere->coord), vector_sub(ray->origin, sphere->coord)) - sphere->radius * sphere->radius;
-	discriminant = b * b - 4.0 * a * c;
-	if (discriminant < 0.0)
-		return (false);
-	sqrtd = sqrt(discriminant);
 
 	// Find the nearest root that lies in the acceptable range.
-	root = (-b - sqrtd) / (2.0 * a);
-	if (root < T_MIN || root > t_max)
-	{
-		root = (-b + sqrtd) / (2.0 * a);
-		if (root < T_MIN || root > t_max)
-			return (false);
-	}
-	// rec->t = get_root(a, b, c, t_max);
-	// if (rec->t == -1)
-		// return (false);
-	// rec->t = root;
+	rec->t = get_root(a, b, c, t_max);
+	if (rec->t == -1)
+		 return (false);
 	rec->p = ray_at(ray, rec->t);
 	rec->normal = scala_div(vector_sub(rec->p, sphere->coord), sphere->radius);
 	if (dot(ray->direction, rec->normal) < 0.0)
@@ -192,8 +177,6 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 
 	cylinder = (t_cylinder *)obj;
 	surface = hit_cylinder_surface(cylinder, ray, t_max);
-	top = -1;
-	bottom = -1;
 	top = hit_cylinder_base(cylinder, ray, t_max, true);
 	bottom = hit_cylinder_base(cylinder, ray, t_max, false);
 
