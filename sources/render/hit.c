@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/18 13:43:33 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 21:19:46 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 			rec->t = temp_rec.t;
 			rec->front_face = temp_rec.front_face;
 			rec->color = temp_rec.color;
+			rec->obj = temp_rec.obj;
+			rec->texture = temp_rec.texture;
 		}
 		obj = obj->next;
 	}
@@ -85,9 +87,11 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
 	}
-//	rec->color = checker_mapping(get_spherical_map(rec->normal), sphere->color, 20, 10);
 	rec->color = sphere->color;
-	rec->normal = bump_mapping(get_spherical_map(rec->normal), rec->normal);
+	rec->obj = obj;
+//	rec->texture = NONE;
+//	rec->texture = CHECKER;
+	rec->texture = BUMP;
 	return (true);
 }
 
@@ -106,15 +110,16 @@ bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	{
 		nom = dot(vector_sub(plane->coord, ray->origin), rec->normal);
 		rec->t = nom / denom;
+		if (rec->t < T_MIN || rec->t > t_max)
+			return (false);
 		rec->p = ray_at(ray, rec->t);
 		rec->front_face = true;
-		if (rec->t > T_MIN && rec->t < t_max)
-		{
-			rec->color = checker_mapping(get_planar_map(rec->p), plane->color, 2, 2);
-			return (true);
-		}
+		rec->color = plane->color;
+		rec->obj = obj;
+//		rec->texture = NONE;
+		rec->texture = CHECKER;
 	}
-	return (false);
+	return (true);
 }
 
 double	hit_cylinder_base(t_cylinder *cylinder, t_ray *ray, double t_max, bool is_top)
@@ -185,6 +190,8 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 
 	cylinder = (t_cylinder *)obj;
 	surface = hit_cylinder_surface(cylinder, ray, t_max);
+	top = -1;
+	bottom = -1;
 	top = hit_cylinder_base(cylinder, ray, t_max, true);
 	bottom = hit_cylinder_base(cylinder, ray, t_max, false);
 
@@ -224,9 +231,11 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1);
 	}
-//	rec->color = checker_mapping(get_cylindrical_map(calibrate_cylinder(cylinder, rec->p), cylinder->height), cylinder->color, cylinder->diameter * 4, cylinder->height);
 	rec->color = cylinder->color;
-	rec->normal = bump_mapping(get_cylindrical_map(calibrate_cylinder(cylinder, rec->p), cylinder->height), rec->normal);
+	rec->obj = obj;
+//	rec->texture = NONE;
+//	rec->texture = CHECKER;
+	rec->texture = BUMP;
 	return (true);
 }
 

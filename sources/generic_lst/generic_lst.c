@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:28:32 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/18 16:56:30 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 16:54:48 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	gl_lstadd_back(t_generic_lst **head, t_generic_lst *new)
 	else
 	{
 		last = *head;
-		while (last->next)
+		while (last->next != NULL)
 			last = last->next;
 		last->next = new;
 	}
