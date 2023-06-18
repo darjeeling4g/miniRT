@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 10:37:17 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/17 22:54:39 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 13:48:04 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,16 @@ t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height)
 		return (color);
 }
 
-t_vec3	bump_mapping(t_texture t, int width, int height)
+t_vec3	bump_mapping(t_texture t, t_vec3 normal)
 {
-	int	u_int;
-	int	v_int;
 	double sines;
 
-	u_int = t.u * width;
-	v_int = t.v * height;
-	sines = sin(t.u * PI* 2) + sin(t.v * PI * 2) + sin(t.u * PI) + sin(t.v * PI);
-	return (vec3(random_double(sines), random_double(sines), random_double(sines)));
+	sines = sin(t.u * PI * 100);
+	if(sines < -0.2)
+		normal = rodrigues_formula(normal, vec3(0.0, 1.0, 0.0), degrees_to_radians(-20));
+	else if(sines > 0.2)
+		normal = rodrigues_formula(normal, vec3(0.0, 1.0, 0.0), degrees_to_radians(20));
+	return (normal);
 }
 
 t_texture	get_spherical_map(t_point3 point)

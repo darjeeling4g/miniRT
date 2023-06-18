@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/17 23:16:02 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 13:43:33 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1); // camera가 오브젝트 안에 있을 때 법선벡터의 방향을 바꾸는 것의 의미는?
 	}
-	rec->normal = unit_vector(vector_add(rec->normal, bump_mapping(get_spherical_map(rec->normal), 1000, 1000)));
 //	rec->color = checker_mapping(get_spherical_map(rec->normal), sphere->color, 20, 10);
 	rec->color = sphere->color;
+	rec->normal = bump_mapping(get_spherical_map(rec->normal), rec->normal);
 	return (true);
 }
 
@@ -224,7 +224,9 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 		rec->front_face = false;
 		rec->normal = scala_mul(rec->normal, -1);
 	}
-	rec->color = checker_mapping(get_cylindrical_map(calibrate_cylinder(cylinder, rec->p), cylinder->height), cylinder->color, cylinder->diameter * 4, cylinder->height);
+//	rec->color = checker_mapping(get_cylindrical_map(calibrate_cylinder(cylinder, rec->p), cylinder->height), cylinder->color, cylinder->diameter * 4, cylinder->height);
+	rec->color = cylinder->color;
+	rec->normal = bump_mapping(get_cylindrical_map(calibrate_cylinder(cylinder, rec->p), cylinder->height), rec->normal);
 	return (true);
 }
 

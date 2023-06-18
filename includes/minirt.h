@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/17 22:39:23 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 13:42:29 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ t_texture	get_spherical_map(t_point3 point);
 t_texture	get_planar_map(t_point3 point);
 t_texture	get_cylindrical_map(t_point3 point, double height);
 t_point3	calibrate_cylinder(t_cylinder *cylinder, t_point3 point);
-t_vec3		bump_mapping(t_texture t, int width, int height);
+t_vec3		bump_mapping(t_texture t, t_vec3 normal);
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);
