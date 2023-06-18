@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/18 13:42:29 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 21:11:43 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@
 // 3
 # define AA 20
 
-enum e_type
+typedef enum e_type
 {
 	SP,
 	PL,
@@ -85,7 +85,14 @@ enum e_type
 	A,
 	C,
 	L
-};
+}	t_type;
+
+typedef enum e_texture
+{
+	NONE,
+	CHECKER,
+	BUMP
+}	t_texture;
 
 typedef struct s_ambient
 {
@@ -112,6 +119,7 @@ typedef struct s_camera
 typedef struct s_light
 {
 	t_generic_lst	*next;
+	int				id;
 	double			ratio;
 	t_point3		coord;
 	t_color3		color;
@@ -164,13 +172,22 @@ typedef struct s_img
 	int		bits_per_pixel;
 	int		line_size;
 	int		endian;
+	int		width;
+	int		height;
 }	t_img;
 
-typedef struct s_texture
+typedef struct s_uv_map
 {
 	double		u;
 	double		v;
-}	t_texture;
+}	t_uv_map;
+
+typedef struct s_tbn
+{
+	t_vec3	t;
+	t_vec3	b;
+	t_vec3	n;
+}	t_tbn;
 
 typedef struct s_ray
 {
@@ -180,11 +197,13 @@ typedef struct s_ray
 
 typedef struct s_hit_record
 {
-	t_point3	p;
-	t_vec3		normal;
-	double		t;
-	bool		front_face;
-	t_color3	color;
+	t_point3		p;
+	t_vec3			normal;
+	double			t;
+	bool			front_face;
+	t_color3		color;
+	t_generic_lst	*obj;
+	t_texture		texture;
 }	t_hit_record;
 
 typedef struct s_screen
@@ -192,6 +211,7 @@ typedef struct s_screen
 	void	*mlx_ptr;
 	void	*win_ptr;
 	t_img	img;
+	t_img	bump;
 	int		resolution;
 }	t_screen;
 
@@ -258,12 +278,14 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
-t_color3	checker_mapping(t_texture t, t_color3 color, int width, int height);
-t_texture	get_spherical_map(t_point3 point);
-t_texture	get_planar_map(t_point3 point);
-t_texture	get_cylindrical_map(t_point3 point, double height);
+void		texture_mapping(t_hit_record *rec, t_img *bump);
+t_color3	checker_mapping(t_uv_map t, t_color3 color, int width, int height);
+t_uv_map	get_spherical_map(t_point3 point);
+t_uv_map	get_planar_map(t_point3 point);
+t_uv_map	get_cylindrical_map(t_point3 point, double height);
 t_point3	calibrate_cylinder(t_cylinder *cylinder, t_point3 point);
-t_vec3		bump_mapping(t_texture t, t_vec3 normal);
+t_vec3		bump_mapping(t_img *bump, t_uv_map map, t_tbn tbn);
+t_tbn		get_tangent_space(t_vec3 tangent, t_vec3 bitangent, t_vec3 normal);
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);

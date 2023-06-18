@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/17 22:28:42 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/18 16:52:07 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ void	l_parser(t_scene *scene, char *line)
 		error_exit("Parsing error", 1);
 	light->color = get_color(&line);
 	light->next = NULL;
+	light->id = L;
 	gl_lstadd_back((t_generic_lst **)&(scene->l_lst), (t_generic_lst *)light);
 }
 
