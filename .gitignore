@@ -53,6 +53,7 @@ dkms.conf
 
 .vscode
 
+miniRT
 test.c
 mlx/*
 libft/*

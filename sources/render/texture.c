@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 10:37:17 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/18 21:26:43 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 17:40:19 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,6 @@ void	texture_mapping(t_hit_record *rec, t_img *bump)
 
 t_vec3	bump_mapping(t_img *bump, t_uv_map map, t_tbn tbn)
 {
-//	double	sine;
-//
-//	sine = sin(t.u * PI * 50);
-//	if(sine < -0.2)
-//		normal = rodrigues_formula(normal, axis, degrees_to_radians(-20));
-//	else if(sine > 0.2)
-//		normal = rodrigues_formula(normal, axis, degrees_to_radians(20));
-//	return (normal);
-
 	int		x;
 	int		y;
 	int		*pixel;
@@ -67,7 +58,7 @@ t_vec3	bump_mapping(t_img *bump, t_uv_map map, t_tbn tbn)
 
 	x = map.u * bump->width;
 	y = map.v * bump->height;
-	pixel = (int *)(bump->addr + (y * bump->line_size + (x * (bump->bits_per_pixel / 8))));
+	pixel = (int *)(bump->addr + (y * bump->line_size + (x * (bump->bpp / 8))));
 	normal = vec3((*pixel & 0xff0000) >> 16, (*pixel & 0xff00) >> 8, *pixel & 0xff);
 	res.x = tbn.t.x * normal.x + tbn.b.x * normal.y + tbn.n.x * normal.z;
 	res.y = tbn.t.y * normal.x + tbn.b.y * normal.y + tbn.n.y * normal.z;

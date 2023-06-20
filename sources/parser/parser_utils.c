@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:47 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/18 09:36:46 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 17:55:55 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 double	get_float(char **line)
 {
-	double res;
+	double	res;
 
 	while (**line == ' ')
 		(*line)++;
@@ -54,7 +54,7 @@ t_color3	get_color(char **line)
 
 int	get_fov(char **line)
 {
-	int res;
+	int	res;
 
 	while (**line == ' ')
 		(*line)++;
@@ -82,7 +82,8 @@ t_point3	get_coordinate(char **line)
 		if (!validate_argument(*line))
 			error_exit("Parsing Error", 1);
 		temp[i] = ft_atof(*line);
-		while ((**line >= '0' && **line <= '9') || **line == '.' || **line == '-' || **line == '+')
+		while ((**line >= '0' && **line <= '9') \
+				|| **line == '.' || **line == '-' || **line == '+')
 			(*line)++;
 		if (**line == ',')
 			(*line)++;
@@ -110,7 +111,8 @@ t_vec3	get_vector(char **line)
 		temp[i] = ft_atof(*line);
 		if (temp[i] < -1.0 || temp[i] > 1.0)
 			error_exit("Parsing Error", 1);
-		while ((**line >= '0' && **line <= '9') || **line == '.' || **line == '-' || **line == '+')
+		while ((**line >= '0' && **line <= '9') \
+				|| **line == '.' || **line == '-' || **line == '+')
 			(*line)++;
 		if (**line == ',')
 			(*line)++;
@@ -120,32 +122,4 @@ t_vec3	get_vector(char **line)
 	vec.y = temp[1];
 	vec.z = temp[2];
 	return (vec);
-}
-
-int	validate_argument(char *line)
-{
-	if (*line == '+')
-		line++;
-	else if (*line == '-')
-		line++;
-	if (!*line)
-		return (0);
-	while (*line)
-	{
-		if (*line == ',' || *line == ' ')
-			break ;
-		else if ((*line >= '0' && *line <= '9') || *line == '.' || *line == '\n')
-			line++;
-		else
-			return (0);
-	}
-	return (1);
-}
-
-void validate_overlap(int id, int *check_overlap) // checking whether A, C, L appear only once or not
-{
-	if (id != 6 && id >= 4 && !check_overlap[id - 4])
-		check_overlap[id - 4] = 1;
-	else if (id != 6 && id >= 4 && check_overlap[id - 4])
-		error_exit("Parsing Error", 1);
 }

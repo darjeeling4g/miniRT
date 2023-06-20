@@ -6,23 +6,23 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/18 22:24:21 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 19:09:29 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void	init_hit(bool (*fp[4])(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec))
+void	init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec))
 {
-	fp[0] = hit_sphere;
-	fp[1] = hit_plane;
-	fp[2] = hit_cylinder;
-	fp[3] = hit_cone;
+	fp[SP] = hit_sp;
+	fp[PL] = hit_pl;
+	fp[CY] = hit_cy;
+	fp[CO] = hit_co;
 }
 
-bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+bool	hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	bool			(*hit[4])(t_generic_lst *, t_ray *, double, t_hit_record *);
+	bool			((*hit[4])(t_lst *, t_ray *, double, t_hit_record *));
 	bool			is_hit;
 	t_hit_record	temp_rec;
 	double			closest_so_far;
@@ -49,7 +49,7 @@ bool	hit_obj(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	return (is_hit);
 }
 
-bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+bool	hit_sp(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_sphere	*sphere;
 	double		a;
@@ -82,7 +82,7 @@ bool	hit_sphere(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	return (true);
 }
 
-bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+bool	hit_pl(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_plane		*plane;
 	double 		denom;
@@ -109,7 +109,7 @@ bool	hit_plane(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	return (true);
 }
 
-double	hit_cylinder_base(t_cylinder *cylinder, t_ray *ray, double t_max, bool is_top)
+double	hit_cy_base(t_cylinder *cy, t_ray *ray, double t_max, bool is_top)
 {
 	t_point3	c;
 	double		r;
@@ -117,22 +117,22 @@ double	hit_cylinder_base(t_cylinder *cylinder, t_ray *ray, double t_max, bool is
 	double		t;
 
 	if (is_top == true)
-		c = vector_add(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0));
+		c = vector_add(cy->coord, scala_mul(cy->vec, cy->height / 2.0));
 	else
-		c = vector_sub(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0));
-	denom = dot(ray->direction, cylinder->vec);
+		c = vector_sub(cy->coord, scala_mul(cy->vec, cy->height / 2.0));
+	denom = dot(ray->direction, cy->vec);
 	if (fabs(denom) < EPSILON)
 		return (-1);
-	t = dot(vector_sub(c, ray->origin), cylinder->vec) / denom;
+	t = dot(vector_sub(c, ray->origin), cy->vec) / denom;
 	if (t < T_MIN || t > t_max)
 		return (-1);
 	r = length(vector_sub(ray_at(ray, t), c));
-	if (r > cylinder->diameter / 2.0)
+	if (r > cy->diameter / 2.0)
 		return (-1);
 	return (t);
 }
 
-double	hit_cylinder_surface(t_cylinder *cylinder, t_ray *ray, double t_max)
+double	hit_cy_surface(t_cylinder *cy, t_ray *ray, double t_max)
 {
 	double		a;
 	double		b;
@@ -144,10 +144,10 @@ double	hit_cylinder_surface(t_cylinder *cylinder, t_ray *ray, double t_max)
 	t_vec3		ce;
 	t_vec3		cp;
 
-	ce = vector_sub(ray->origin, vector_sub(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0)));
-	a = dot(ray->direction, ray->direction) - pow(dot(ray->direction, cylinder->vec), 2.0);
-	b = 2.0 * (dot(ce, ray->direction) - dot(ray->direction, cylinder->vec) * dot(ce, cylinder->vec));
-	c = dot(ce, ce) - pow(dot(ce, cylinder->vec), 2.0) - pow((cylinder->diameter / 2.0), 2.0);
+	ce = vector_sub(ray->origin, vector_sub(cy->coord, scala_mul(cy->vec, cy->height / 2.0)));
+	a = dot(ray->direction, ray->direction) - pow(dot(ray->direction, cy->vec), 2.0);
+	b = 2.0 * (dot(ce, ray->direction) - dot(ray->direction, cy->vec) * dot(ce, cy->vec));
+	c = dot(ce, ce) - pow(dot(ce, cy->vec), 2.0) - pow((cy->diameter / 2.0), 2.0);
 	
 	discriminant = b * b - 4.0 * a * c;
 	if (discriminant < EPSILON)
@@ -161,13 +161,13 @@ double	hit_cylinder_surface(t_cylinder *cylinder, t_ray *ray, double t_max)
 			return (-1);
 	}
 	p = ray_at(ray, root);
-	cp = vector_sub(p, vector_sub(cylinder->coord, scala_mul(cylinder->vec, cylinder->height / 2.0)));
-	if (dot(cp, cylinder->vec) < 0.0 || dot(cp, cylinder->vec) > cylinder->height)
+	cp = vector_sub(p, vector_sub(cy->coord, scala_mul(cy->vec, cy->height / 2.0)));
+	if (dot(cp, cy->vec) < 0.0 || dot(cp, cy->vec) > cy->height)
 		return (-1);
 	return (root);
 }
 
-bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+bool	hit_cy(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_cylinder	*cylinder;
 	double		surface;
@@ -176,9 +176,9 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 	t_vec3		cp;
 
 	cylinder = (t_cylinder *)obj;
-	surface = hit_cylinder_surface(cylinder, ray, t_max);
-	top = hit_cylinder_base(cylinder, ray, t_max, true);
-	bottom = hit_cylinder_base(cylinder, ray, t_max, false);
+	surface = hit_cy_surface(cylinder, ray, t_max);
+	top = hit_cy_base(cylinder, ray, t_max, true);
+	bottom = hit_cy_base(cylinder, ray, t_max, false);
 
 	if (surface == -1 && top == -1 && bottom == -1)
 		return (false);
@@ -224,7 +224,7 @@ bool	hit_cylinder(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *re
 	return (true);
 }
 
-bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
+bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_cone		*cone;
 	double		a;
@@ -236,7 +236,7 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	double		base;
 
 	cone = (t_cone *)obj;
-	base = hit_cone_base(cone, ray, t_max, rec);
+	base = hit_co_base(cone, ray, t_max, rec);
 	cosine = cos(atan2(cone->diameter / 2.0, cone->height));
 	vertex = vector_sub(cone->base_center, scala_mul(cone->vec, cone->height));
 
@@ -272,7 +272,7 @@ bool	hit_cone(t_generic_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	return (true);
 }
 
-double	hit_cone_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec)
+double	hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	double 		denom;
 	double		nom;

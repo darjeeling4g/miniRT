@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 16:17:25 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/25 16:17:29 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 17:34:25 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,3 @@ double	ft_atof(const char *str)
 		return (result * -1);
 	return (result);
 }
-

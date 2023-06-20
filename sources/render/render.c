@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/06 07:39:17 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 17:39:42 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	draw_pixel(t_screen *screen, t_color3 color, int x, int y)
 		while (++j < screen->resolution)
 		{
 			pixel = (int *)(screen->img.addr + (y * screen->img.line_size + \
-				(x * (screen->img.bits_per_pixel / 8))));
+				(x * (screen->img.bpp / 8))));
 			*pixel = write_color(color);
 			x++;
 		}

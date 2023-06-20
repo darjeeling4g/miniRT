@@ -6,14 +6,14 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:16:38 by siyang            #+#    #+#             */
-/*   Updated: 2023/05/26 21:25:35 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 18:41:03 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GENERIC_LST_H
 # define GENERIC_LST_H
 
-#include <stddef.h>
+# include <stddef.h>
 
 typedef struct s_generic_lst
 {

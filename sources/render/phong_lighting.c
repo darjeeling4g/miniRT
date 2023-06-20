@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 16:55:04 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/06 10:47:08 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 18:52:45 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_color3	phong_lighting(t_scene *scene, t_hit_record rec, t_ray ray)
 	return (result);
 }
 
-t_color3	point_light(t_generic_lst *obj, t_light light, t_hit_record rec, t_ray ray)
+t_color3	point_light(t_lst *obj, t_light light, t_hit_record rec, t_ray ray)
 {
 	t_color3	diffuse;
 	t_vec3		light_dir;
@@ -64,7 +64,7 @@ t_color3	point_light(t_generic_lst *obj, t_light light, t_hit_record rec, t_ray 
 	return (scala_mul(vector_add(diffuse, specular), brightness));
 }
 
-bool	in_shadow(t_generic_lst *obj, t_point3 origin, t_vec3 direction)
+bool	in_shadow(t_lst *obj, t_point3 origin, t_vec3 direction)
 {
 	t_ray			shadow_ray;
 	t_hit_record	temp;

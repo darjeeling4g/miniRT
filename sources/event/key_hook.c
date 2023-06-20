@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:30:45 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/17 18:42:40 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/20 18:32:26 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,17 @@ void	camera_move(int keycode, t_camera *camera)
 
 void	camera_rotation(int keycode, t_camera *camera)
 {
+	double	angle;
+
+	angle = degrees_to_radians(5.0);
 	if (keycode == TILT_UP)
-		camera->vec = rodrigues_formula(camera->vec, camera->u, degrees_to_radians(5.0));
+		camera->vec = rodrigues_formula(camera->vec, camera->u, angle);
 	else if (keycode == TILT_DOWN)
-		camera->vec = rodrigues_formula(camera->vec, camera->u, degrees_to_radians(-5.0));
+		camera->vec = rodrigues_formula(camera->vec, camera->u, -angle);
 	else if (keycode == PAN_LEFT)
-		camera->vec = rodrigues_formula(camera->vec, camera->v, degrees_to_radians(5.0));
+		camera->vec = rodrigues_formula(camera->vec, camera->v, angle);
 	else if (keycode == PAN_RIGHT)
-		camera->vec = rodrigues_formula(camera->vec, camera->v, degrees_to_radians(-5.0));
+		camera->vec = rodrigues_formula(camera->vec, camera->v, -angle);
 }
 
 t_vec3	rodrigues_formula(t_vec3 vec, t_vec3 axis, double angle)
@@ -80,18 +83,19 @@ t_vec3	rodrigues_formula(t_vec3 vec, t_vec3 axis, double angle)
 	double	sin_theta;
 	double	cos_theta;
 
-//	sin_theta = sin(degrees_to_radians(angle));
-//	cos_theta = cos(degrees_to_radians(angle));
 	sin_theta = sin(angle);
 	cos_theta = cos(angle);
-	res.x = (vec.x) * (cos_theta + (1 - cos_theta) * axis.x * axis.x) + \
-			(vec.y) * ((1 - cos_theta) * axis.x * axis.y - sin_theta * axis.z) + \
-			(vec.z) * ((1 - cos_theta) * axis.x * axis.z + sin_theta * axis.y);
-    res.y = (vec.x) * ((1 - cos_theta) * axis.y * axis.x + sin_theta * axis.z) + \
-			(vec.y) * (cos_theta + (1 - cos_theta) * axis.y * axis.y) + \
-			(vec.z) * ((1 - cos_theta) * axis.y * axis.z - sin_theta * axis.x);
-    res.z = (vec.x) * ((1 - cos_theta) * axis.z * axis.x - sin_theta * axis.y) + \
-			(vec.y) * ((1 - cos_theta) * axis.z * axis.y + sin_theta * axis.x) + \
-			(vec.z) * (cos_theta + (1 - cos_theta) * axis.z * axis.z);
+	res.x = \
+		(vec.x) * (cos_theta + (1 - cos_theta) * axis.x * axis.x) + \
+		(vec.y) * ((1 - cos_theta) * axis.x * axis.y - sin_theta * axis.z) + \
+		(vec.z) * ((1 - cos_theta) * axis.x * axis.z + sin_theta * axis.y);
+	res.y = \
+		(vec.x) * ((1 - cos_theta) * axis.y * axis.x + sin_theta * axis.z) + \
+		(vec.y) * (cos_theta + (1 - cos_theta) * axis.y * axis.y) + \
+		(vec.z) * ((1 - cos_theta) * axis.y * axis.z - sin_theta * axis.x);
+	res.z = \
+		(vec.x) * ((1 - cos_theta) * axis.z * axis.x - sin_theta * axis.y) + \
+		(vec.y) * ((1 - cos_theta) * axis.z * axis.y + sin_theta * axis.x) + \
+		(vec.z) * (cos_theta + (1 - cos_theta) * axis.z * axis.z);
 	return (res);
 }
