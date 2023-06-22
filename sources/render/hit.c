@@ -22,10 +22,10 @@ void	init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record *
 
 bool	hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	bool			((*hit[4])(t_lst *, t_ray *, double, t_hit_record *));
 	bool			is_hit;
 	t_hit_record	temp_rec;
 	double			closest_so_far;
+	bool			(**hit)(t_lst *, t_ray *, double, t_hit_record *);
 
 	init_hit(hit);
 	is_hit = false;
