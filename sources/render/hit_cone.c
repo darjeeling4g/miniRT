@@ -43,7 +43,7 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->t = -1;
 	if (rec->t == -1 && base == -1)
 		return (false);
-	else if (base != -1 && base < rec->t)
+	else if ((base != -1 && base < rec->t) || (base != -1 && rec->t == -1))
 	{
 		rec->t = base;
 		return (true);
