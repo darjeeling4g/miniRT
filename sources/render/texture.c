@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 10:37:17 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/21 19:52:42 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 13:31:18 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,14 @@ t_color3	checker_mapping(t_uv_map map, t_color3 color, int width, int height)
 
 void	get_checker_size(t_hit_record *rec, int *width, int *height)
 {
+	t_sphere	*sphere;
 	t_cylinder	*cylinder;
 
 	if (rec->obj->id == SP)
 	{
-		*width = 20;
-		*height = 10;
+		sphere = (t_sphere *)rec->obj;
+		*height = sphere->radius * 10;
+		*width = *height * 2;
 	}
 	else if (rec->obj->id == PL)
 	{

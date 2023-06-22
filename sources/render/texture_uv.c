@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:32:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/21 21:40:14 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 13:21:24 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,15 @@ t_uv_map	get_cylindrical_map(t_point3 point, double r, double height)
 	t_uv_map	res;
 	double		phi;
 
+	(void) height;
 	phi = atan2(point.x, -point.z);
 	res.u = phi / (2 * PI) + 0.5;
-//	res.v = point.y / (height + EPSILON);
-	res.v = length_squared(point) / (pow(r, 2.0) + pow(height, 2.0));
+	if (point.y < EPSILON)
+		res.v = length(point) / r;
+	else if (height - point.y < EPSILON)
+		res.v = sqrt(length_squared(point) - pow(height, 2.0)) / r;
+	else
+		res.v = point.y / (height + EPSILON);
 	return (res);
 }
 

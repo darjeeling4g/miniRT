@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:14:54 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/21 20:49:12 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 13:26:35 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	hit_sp(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	rec->color = sphere->color;
 	rec->obj = obj;
 //	rec->texture = NONE;
-//	rec->texture = CHECKER;
-	rec->texture = BUMP;
+	rec->texture = CHECKER;
+//	rec->texture = BUMP;
 	return (true);
 }
