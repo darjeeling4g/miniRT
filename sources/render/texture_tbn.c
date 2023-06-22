@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 19:17:02 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/21 21:46:57 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 13:34:10 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ t_tbn	get_tbn(t_hit_record *rec)
 		cylinder = (t_cylinder *)rec->obj;
 		b = cross(cylinder->vec, rec->normal);
 		if (length(b) < EPSILON)
-			tbn = tangent_space(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), rec->normal);
+			tbn = tangent_space(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), \
+					rec->normal);
 		else
 			tbn = tangent_space(cylinder->vec, unit_vector(b), rec->normal);
 	}

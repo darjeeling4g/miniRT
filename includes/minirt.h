@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/21 21:13:07 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 19:23:55 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,15 @@ typedef enum e_type
 	L
 }	t_type;
 
-typedef enum e_texture
+typedef enum e_id
 {
 	NONE,
 	CHECKER,
-	BUMP
-}	t_texture;
+	BUMP,
+	TOP,
+	BOTTOM,
+	SIDE
+}	t_id;
 
 typedef struct s_ambient
 {
@@ -204,7 +207,7 @@ typedef struct s_hit_record
 	double		t;
 	t_color3	color;
 	t_lst		*obj;
-	t_texture	texture;
+	t_id		texture;
 }	t_hit_record;
 
 typedef struct s_screen
@@ -288,7 +291,9 @@ bool		hit_pl(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 // hit_cylinder.c
 bool		hit_cy(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 double		hit_cy_base(t_cylinder *cy, t_ray *ray, double t_max, bool is_top);
-double		hit_cy_surface(t_cylinder *cy, t_ray *ray, double t_max);
+double		hit_cy_side(t_cylinder *cy, t_ray *ray, double t_max);
+t_id		select_surf(double top, double bottom, double side, t_hit_record *rec);
+void		set_cy_rec(t_cylinder *cy, t_ray *ray, t_hit_record *rec, int surface);
 
 // hit_cone.c
 bool		hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);

@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:14:58 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/21 20:43:59 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 13:38:24 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 bool	hit_pl(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	t_plane		*plane;
-	double 		denom;
-	double		nom;
+	t_plane	*plane;
+	double	denom;
+	double	nom;
 
-	plane = (t_plane*)obj;
+	plane = (t_plane *)obj;
 	rec->normal = unit_vector(plane->vec);
 	if (dot(rec->normal, ray->direction) > 0.0)
 		rec->normal = scala_mul(rec->normal, -1);

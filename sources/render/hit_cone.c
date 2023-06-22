@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:15:05 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/21 20:45:32 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 16:41:06 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 
 	cone = (t_cone *)obj;
 	base = hit_co_base(cone, ray, t_max, rec);
+	base = -1;
 	cosine = cos(atan2(cone->diameter / 2.0, cone->height));
 	vertex = vector_sub(cone->base_center, scala_mul(cone->vec, cone->height));
 
