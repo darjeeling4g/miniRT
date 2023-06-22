@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:42:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/18 20:55:04 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/21 20:06:55 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_color3	ray_color(t_scene *scene, t_ray *ray)
 
 t_ray	get_ray(t_camera cam, double u, double v)
 {
-	t_ray ray;
+	t_ray	ray;
 
 	ray.origin = cam.coord;
 	ray.direction = vector_sub(vector_add(vector_add(cam.lower_left_corner, \

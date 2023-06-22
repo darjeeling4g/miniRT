@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 14:51:51 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/20 17:39:42 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/21 20:06:00 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ void	render(t_scene *scene, t_screen *screen)
 		}
 		y -= screen->resolution;
 	}
-	mlx_put_image_to_window(scene->screen->mlx_ptr, scene->screen->win_ptr, \
-		scene->screen->img.ptr, 0, 0);
-	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 20, 0x228b22, \
-		"[MODE] 1(Light ON & OFF) | 2(Resolution High & Low) |3(Anti-aliasing)");
-	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 50, 0x228b22, \
-		"[MOVE] W(forward) | S(backward) | A(left) | D(right) | Q(up) | R(down)");
-	mlx_string_put(scene->screen->mlx_ptr, scene->screen->win_ptr, 10, 80, 0x228b22, \
-		"[ROTATION] Up(tilt-up) | Down(tilt-down) | Left(pan-left) | Right(pan-right)");
+	mlx_put_image_to_window(screen->mlx_ptr, screen->win_ptr, \
+		screen->img.ptr, 0, 0);
+	mlx_string_put(screen->mlx_ptr, screen->win_ptr, 10, 20, 0x228b22, \
+	"[MODE] 1(Light ON & OFF) | 2(Resolution High & Low) | 3(Anti-aliasing)");
+	mlx_string_put(screen->mlx_ptr, screen->win_ptr, 10, 50, 0x228b22, \
+	"[MOVE] W(forward) | S(backward) | A(left) | D(right) | Q(up) | E(down)");
+	mlx_string_put(screen->mlx_ptr, screen->win_ptr, 10, 80, 0x228b22, \
+	"[ROT] Up(tilt-up) | Down(tilt-down) | Left(pan-left) | Right(pan-right)");
 }
 
 t_color3	get_pixel_color(t_scene *scene, int x, int y)
@@ -53,7 +53,7 @@ t_color3	get_pixel_color(t_scene *scene, int x, int y)
 	i = 0;
 	while (i < scene->samples)
 	{
-		u = (double)(x + random_double(i)) / (WIDTH - 1); // random_double의 반환값은 0~1사이인데, 그럼 x가 WIDTH-1의 값일 때 random_double의 반환값에 따라서 u의 값이 1을 넘어버릴 수 있는데???
+		u = (double)(x + random_double(i)) / (WIDTH - 1);
 		v = (double)(HEIGHT - y - 1 + random_double(i)) / (HEIGHT - 1);
 		ray = get_ray(scene->c, u, v);
 		color = vector_add(color, ray_color(scene, &ray));
@@ -87,8 +87,8 @@ void	draw_pixel(t_screen *screen, t_color3 color, int x, int y)
 
 int	write_color(t_color3 color)
 {
-	int res;
-	int tmp[3];
+	int	res;
+	int	tmp[3];
 
 	res = 0x0;
 	tmp[0] = clamp(color.x, 0.0, 1.0) * 255.0;

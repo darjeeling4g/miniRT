@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/20 19:16:01 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/21 21:13:07 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,6 @@ typedef struct s_hit_record
 	t_point3	p;
 	t_vec3		normal;
 	double		t;
-	bool		front_face;
 	t_color3	color;
 	t_lst		*obj;
 	t_texture	texture;
@@ -297,15 +296,20 @@ double		hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec);
 
 // texture.c
 void		texture_mapping(t_hit_record *rec, t_img *bump);
-t_color3	checker_mapping(t_uv_map t, t_color3 color, int width, int height);
 t_vec3		bump_mapping(t_img *bump, t_uv_map map, t_tbn tbn);
+t_color3	checker_mapping(t_uv_map t, t_color3 color, int width, int height);
+void		get_checker_size(t_hit_record *rec, int *width, int *height);
 
-// texture_utils.c
+// texture_uv.c
+t_uv_map	get_uv_map(t_hit_record *rec);
 t_uv_map	get_spherical_map(t_point3 point);
 t_uv_map	get_planar_map(t_point3 point);
-t_uv_map	get_cylindrical_map(t_point3 point, double height);
+t_uv_map	get_cylindrical_map(t_point3 point, double r, double height);
 t_point3	calibrate_cylinder(t_cylinder *cylinder, t_point3 point);
-t_tbn		get_tangent_space(t_vec3 tangent, t_vec3 bitangent, t_vec3 normal);
+
+// texture_tbn.c
+t_tbn		get_tbn(t_hit_record *rec);
+t_tbn		tangent_space(t_vec3 tangent, t_vec3 bitangent, t_vec3 normal);
 
 // ray.c
 t_point3	ray_at(t_ray *ray, double t);
@@ -315,6 +319,8 @@ t_ray		get_ray(t_camera cam, double u, double v);
 // phong_lighting.c
 t_color3	phong_lighting(t_scene *scene, t_hit_record rec, t_ray ray);
 t_color3	point_light(t_lst *obj, t_light light, t_hit_record rec, t_ray ray);
+t_color3	diffuse_reflection(t_light light, t_hit_record rec);
+t_color3	specular_reflection(t_light light, t_hit_record rec, t_ray ray);
 bool		in_shadow(t_lst *obj, t_point3 origin, t_vec3 direction);
 
 // key_hook.c
