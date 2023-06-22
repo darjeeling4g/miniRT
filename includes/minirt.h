@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 19:23:55 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 20:04:39 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@
 
 typedef struct s_generic_lst	t_lst;
 
-typedef enum e_type
+typedef enum e_id
 {
 	SP,
 	PL,
@@ -87,9 +87,9 @@ typedef enum e_type
 	A,
 	C,
 	L
-}	t_type;
+}	t_id;
 
-typedef enum e_id
+typedef enum e_type
 {
 	NONE,
 	CHECKER,
@@ -97,7 +97,7 @@ typedef enum e_id
 	TOP,
 	BOTTOM,
 	SIDE
-}	t_id;
+}	t_type;
 
 typedef struct s_ambient
 {
@@ -137,6 +137,7 @@ typedef struct s_sphere
 	t_point3	coord;
 	double		radius;
 	t_color3	color;
+	t_type		texture;
 }	t_sphere;
 
 typedef struct s_plane
@@ -146,6 +147,7 @@ typedef struct s_plane
 	t_point3	coord;
 	t_vec3		vec;
 	t_color3	color;
+	t_type		texture;
 }	t_plane;
 
 typedef struct s_cylinder
@@ -157,6 +159,7 @@ typedef struct s_cylinder
 	double		diameter;
 	double		height;
 	t_color3	color;
+	t_type		texture;
 }	t_cylinder;
 
 typedef struct s_cone
@@ -168,6 +171,7 @@ typedef struct s_cone
 	double		diameter;
 	double		height;
 	t_color3	color;
+	t_type		texture;
 }	t_cone;
 
 typedef struct s_img
@@ -207,7 +211,7 @@ typedef struct s_hit_record
 	double		t;
 	t_color3	color;
 	t_lst		*obj;
-	t_id		texture;
+	t_type		texture;
 }	t_hit_record;
 
 typedef struct s_screen
@@ -265,6 +269,7 @@ t_color3	get_color(char **line);
 int			get_fov(char **line);
 t_point3	get_coordinate(char **line);
 t_vec3		get_vector(char **line);
+t_type		get_texture(char **line);
 
 // parser_validation.c
 int			validate_argument(char *line);
@@ -292,7 +297,7 @@ bool		hit_pl(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool		hit_cy(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 double		hit_cy_base(t_cylinder *cy, t_ray *ray, double t_max, bool is_top);
 double		hit_cy_side(t_cylinder *cy, t_ray *ray, double t_max);
-t_id		select_surf(double top, double bottom, double side, t_hit_record *rec);
+t_type		select_type(double top, double bottom, double side, t_hit_record *rec);
 void		set_cy_rec(t_cylinder *cy, t_ray *ray, t_hit_record *rec, int surface);
 
 // hit_cone.c

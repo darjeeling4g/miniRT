@@ -6,11 +6,23 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:47 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/20 17:55:55 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 20:11:55 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+t_type	get_texture(char **line)
+{
+	while (**line == ' ')
+		(*line)++;
+	if (!ft_strncmp(*line, "checker\n", 9))
+		return (CHECKER);
+	else if (!ft_strncmp(*line, "bump\n", 6))
+		return (BUMP);
+	else
+		return (NONE);
+}
 
 double	get_float(char **line)
 {

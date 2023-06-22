@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:14:54 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 13:37:47 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 20:06:43 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ bool	hit_sp(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->normal = scala_mul(rec->normal, -1);
 	rec->color = sphere->color;
 	rec->obj = obj;
-//	rec->texture = NONE;
-//	rec->texture = CHECKER;
-	rec->texture = BUMP;
+	rec->texture = sphere->texture;
 	return (true);
 }

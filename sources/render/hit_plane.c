@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:14:58 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 13:38:24 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 20:05:55 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ bool	hit_pl(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->p = ray_at(ray, rec->t);
 		rec->color = plane->color;
 		rec->obj = obj;
-//		rec->texture = NONE;
-		rec->texture = CHECKER;
+		rec->texture = plane->texture;
 	}
 	return (true);
 }

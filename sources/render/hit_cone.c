@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:15:05 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 16:41:06 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 20:07:40 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	if (dot(ray->direction, rec->normal) > 0.0)
 		rec->normal = scala_mul(rec->normal, -1);
 	rec->color = cone->color;
+	rec->texture = NONE;
 	return (true);
 }
 
@@ -72,6 +73,7 @@ double	hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->t = nom / denom;
 		rec->p = ray_at(ray, rec->t);
 		rec->color = cone->color;
+		rec->texture = NONE;
 		r = length(vector_sub(ray_at(ray, rec->t), cone->base_center));
 		if (r > cone->diameter / 2.0)
 			return (-1);

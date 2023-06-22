@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:15:02 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 19:23:39 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 20:05:36 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 bool	hit_cy(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_cylinder	*cy;
-	t_id		surface;
+	t_type		surface;
 
 	cy = (t_cylinder *)obj;
-	surface = select_surf(hit_cy_base(cy, ray, t_max, true), \
+	surface = select_type(hit_cy_base(cy, ray, t_max, true), \
 		hit_cy_base(cy, ray, t_max, false), hit_cy_side(cy, ray, t_max), rec);
 	if (surface == NONE)
 		return (false);
@@ -46,12 +46,10 @@ void	set_cy_rec(t_cylinder *cy, t_ray *ray, t_hit_record *rec, int surface)
 		rec->normal = scala_mul(rec->normal, -1);
 	rec->color = cy->color;
 	rec->obj = (t_lst *)cy;
-//	rec->texture = NONE;
-//	rec->texture = CHECKER;
-	rec->texture = BUMP;
+	rec->texture = cy->texture;
 }
 
-t_id	select_surf(double top, double bottom, double side, t_hit_record *rec)
+t_type	select_type(double top, double bottom, double side, t_hit_record *rec)
 {
 	if (side == -1 && top == -1 && bottom == -1)
 		return (NONE);
