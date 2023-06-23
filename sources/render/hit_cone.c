@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:15:05 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 20:07:40 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/23 17:16:05 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,8 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 
 	cone = (t_cone *)obj;
 	base = hit_co_base(cone, ray, t_max, rec);
-<<<<<<< HEAD
 	rec->t = get_root(obj, ray, t_max);
 	cp = vector_add(vector_sub(ray->origin, get_vertex(cone)), scala_mul(ray->direction, rec->t));
-=======
-	base = -1;
-	cosine = cos(atan2(cone->diameter / 2.0, cone->height));
-	vertex = vector_sub(cone->base_center, scala_mul(cone->vec, cone->height));
-
-	a = dot(ray->direction, ray->direction) * pow(cosine, 2.0) - pow(dot(ray->direction, cone->vec), 2.0);
-	
-	b = 2 * dot(vector_sub(ray->origin, vertex), ray->direction) * pow(cosine, 2.0) \
-	- 2 * dot(ray->direction, cone->vec) * dot(vector_sub(ray->origin, vertex), cone->vec);
-	
-	c = dot(vector_sub(ray->origin, vertex), vector_sub(ray->origin, vertex)) \
-	* pow(cosine, 2.0) - pow(dot(vector_sub(ray->origin, vertex), cone->vec), 2.0);
-
-	rec->t = get_root(a, b, c, t_max);
-	cp = vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, rec->t));
->>>>>>> 443ef65adc09a0d3af89a1efd6df001bd64b50ca
 	if (dot(cp, cone->vec) > cone->height || dot(unit_vector(cp), cone->vec) < 0.0)
 		rec->t = -1;
 	if (rec->t == -1 && base == -1)

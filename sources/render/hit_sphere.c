@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:14:54 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 20:06:43 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/23 17:16:33 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,7 @@ bool	hit_sp(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	t_sphere	*sphere;
 
 	sphere = (t_sphere *)obj;
-<<<<<<< HEAD
 	rec->t = get_root(obj, ray, t_max);
-=======
-	a = dot(ray->direction, ray->direction);
-	b = 2.0 * dot(vector_sub(ray->origin, sphere->coord), ray->direction);
-	c = dot(vector_sub(ray->origin, sphere->coord), \
-			vector_sub(ray->origin, sphere->coord)) \
-		- sphere->radius * sphere->radius;
-	rec->t = get_root(a, b, c, t_max);
->>>>>>> 443ef65adc09a0d3af89a1efd6df001bd64b50ca
 	if (rec->t == -1)
 		return (false);
 	rec->p = ray_at(ray, rec->t);
