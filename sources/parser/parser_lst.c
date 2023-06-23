@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:04:38 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/20 18:07:03 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 20:04:13 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	sp_parser(t_scene *scene, char *line)
 	sp->coord = get_coordinate(&line);
 	sp->radius = get_float(&line) / 2.0;
 	sp->color = get_color(&line);
+	sp->texture = get_texture(&line);
 	sp->next = NULL;
 	sp->id = SP;
 	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)sp);
@@ -54,6 +55,7 @@ void	pl_parser(t_scene *scene, char *line)
 	pl->coord = get_coordinate(&line);
 	pl->vec = get_vector(&line);
 	pl->color = get_color(&line);
+	pl->texture = get_texture(&line);
 	pl->next = NULL;
 	pl->id = PL;
 	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)pl);
@@ -71,6 +73,7 @@ void	cy_parser(t_scene *scene, char *line)
 	cy->diameter = get_float(&line);
 	cy->height = get_float(&line);
 	cy->color = get_color(&line);
+	cy->texture = get_texture(&line);
 	cy->next = NULL;
 	cy->id = CY;
 	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)cy);
@@ -88,6 +91,7 @@ void	co_parser(t_scene *scene, char *line)
 	co->diameter = get_float(&line);
 	co->height = get_float(&line);
 	co->color = get_color(&line);
+	co->texture = get_texture(&line);
 	co->next = NULL;
 	co->id = CO;
 	gl_lstadd_back(&(scene->obj_lst), (t_generic_lst *)co);
