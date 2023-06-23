@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 21:56:28 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/23 19:28:10 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ void	parser(int fd, t_scene *scene)
 	int		id;
 	void	(*fp[7])(t_scene *, char *);
 	int		check_overlap[2];
-
+	char	*tmp;
+	
 	init_parser(fp);
 	ft_bzero(check_overlap, sizeof(int) * 2);
 	while (true)
 	{
 		line = get_next_line(fd);
+		tmp = line;
 		if (line == NULL)
 			return ;
 		id = scan_id(line);
@@ -35,6 +37,7 @@ void	parser(int fd, t_scene *scene)
 		else
 			line++;
 		fp[id](scene, line);
+		free(tmp);
 	}
 }
 

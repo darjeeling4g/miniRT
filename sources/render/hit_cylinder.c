@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cylinder.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:15:02 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 17:19:45 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/23 19:07:15 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,21 +102,11 @@ double	hit_cy_base(t_cylinder *cy, t_ray *ray, double t_max, bool is_top)
 
 double	hit_cy_side(t_cylinder *cy, t_ray *ray, double t_max)
 {
-	t_point3	coeff;
 	double		root;
 	t_point3	p;
-	t_vec3		ce;
 	t_vec3		cp;
 
-	ce = vector_sub(ray->origin, vector_sub(cy->coord, \
-			scala_mul(cy->vec, cy->height / 2.0)));
-	coeff.x = dot(ray->direction, ray->direction) \
-			- pow(dot(ray->direction, cy->vec), 2.0);
-	coeff.y = 2.0 * (dot(ce, ray->direction) \
-			- dot(ray->direction, cy->vec) * dot(ce, cy->vec));
-	coeff.z = dot(ce, ce) - pow(dot(ce, cy->vec), 2.0) \
-			- pow((cy->diameter / 2.0), 2.0);
-	root = get_root(coeff.x, coeff.y, coeff.z, t_max);
+	root = get_root((t_lst*)cy, ray, t_max);
 	if (root == -1)
 		return (-1);
 	p = ray_at(ray, root);

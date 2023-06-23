@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 22:20:25 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/23 19:22:15 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define EPSILON 1e-6
 # define T_MIN EPSILON
 # define T_MAX HUGE_VAL
-# define PI 3.1415926535897932385
+# define PI M_PI
 
 # define RANDOM_A 1103515245
 # define RANDOM_C 12345
@@ -290,11 +290,11 @@ void		init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record 
 bool		hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // hit_utils.c
-double	get_root(t_lst *obj, t_ray *ray, double t_max);
-double*	get_coef(t_lst *obj, t_ray *ray);
-double*	get_coef_co(t_lst *obj, t_ray *ray);
-double*	get_coef_sp(t_lst *obj, t_ray *ray);
-double	calc_discriminant(double a, double b, double c, double t_max);
+double		get_root(t_lst *obj, t_ray *ray, double t_max);
+t_point3	get_coef_co(t_lst *obj, t_ray *ray);
+t_point3	get_coef_sp(t_lst *obj, t_ray *ray);
+t_point3	get_coef_cy(t_lst *obj, t_ray *ray);
+double		calc_discriminant(double a, double b, double c, double t_max);
 
 // hit_sphere.c
 bool		hit_sp(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
@@ -312,8 +312,8 @@ void		set_cy_rec(t_cylinder *cy, t_ray *ray, t_hit_record *rec, int surface);
 // hit_cone.c
 bool		hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 double		hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec);
-t_vec3	get_vertex(t_cone *cone);
-double	get_cosine(t_cone *cone);
+t_vec3		get_vertex(t_cone *cone);
+double		get_cosine(t_cone *cone);
 
 // texture.c
 void		texture_mapping(t_hit_record *rec, t_img *bump);

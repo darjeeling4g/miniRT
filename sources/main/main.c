@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 22:19:58 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/23 19:28:39 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+void leaks()
+{
+	system("leaks miniRT");
+}
 
 int	main(int argc, char *argv[])
 {
@@ -18,6 +23,7 @@ int	main(int argc, char *argv[])
 	t_scene		scene;
 	t_screen	screen;
 
+	atexit(leaks);
 	if (argc != 2)
 		error_exit("Error: invalid argument", 1);
 	fd = open(argv[1], O_RDONLY);
