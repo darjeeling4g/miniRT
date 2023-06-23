@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 17:14:19 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/23 19:46:27 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ void	init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record *
 
 bool	hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	bool			((*hit[4])(t_lst *, t_ray *, double, t_hit_record *));
+	t_hit_fp		hit;
 	bool			is_hit;
 	t_hit_record	temp_rec;
 	double			closest_so_far;
 
-	init_hit(hit);
+	init_hit(hit.hit);
 	is_hit = false;
 	closest_so_far = t_max;
 	while (obj)
 	{
-		if (hit[obj->id](obj, ray, closest_so_far, &temp_rec))
+		if (hit.hit[obj->id](obj, ray, closest_so_far, &temp_rec))
 		{
 			is_hit = true;
 			closest_so_far = temp_rec.t;
