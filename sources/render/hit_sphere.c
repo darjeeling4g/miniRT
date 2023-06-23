@@ -15,17 +15,9 @@
 bool	hit_sp(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_sphere	*sphere;
-	double		a;
-	double		b;
-	double		c;
 
 	sphere = (t_sphere *)obj;
-	a = dot(ray->direction, ray->direction);
-	b = 2.0 * dot(vector_sub(ray->origin, sphere->coord), ray->direction);
-	c = dot(vector_sub(ray->origin, sphere->coord), vector_sub(ray->origin, sphere->coord)) - sphere->radius * sphere->radius;
-
-	// Find the nearest root that lies in the acceptable range.
-	rec->t = get_root(a, b, c, t_max);
+	rec->t = get_root(obj, ray, t_max);
 	if (rec->t == -1)
 		 return (false);
 	rec->p = ray_at(ray, rec->t);
