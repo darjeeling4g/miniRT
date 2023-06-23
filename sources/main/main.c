@@ -6,16 +6,11 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 19:28:39 by daewoole         ###   ########.fr       */
+/*   Updated: 2023/06/23 21:11:31 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-void leaks()
-{
-	system("leaks miniRT");
-}
 
 int	main(int argc, char *argv[])
 {
@@ -23,7 +18,8 @@ int	main(int argc, char *argv[])
 	t_scene		scene;
 	t_screen	screen;
 
-	atexit(leaks);
+	if (ft_strncmp((argv[1] + ft_strlen(argv[1]) - 3), ".rt", 4))
+		error_exit("Error: invalid file name", 1);
 	if (argc != 2)
 		error_exit("Error: invalid argument", 1);
 	fd = open(argv[1], O_RDONLY);

@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 19:28:10 by daewoole         ###   ########.fr       */
+/*   Updated: 2023/06/23 20:50:05 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	parser(int fd, t_scene *scene)
 	void	(*fp[7])(t_scene *, char *);
 	int		check_overlap[2];
 	char	*tmp;
-	
+
 	init_parser(fp);
 	ft_bzero(check_overlap, sizeof(int) * 2);
 	while (true)
@@ -28,15 +28,18 @@ void	parser(int fd, t_scene *scene)
 		tmp = line;
 		if (line == NULL)
 			return ;
-		id = scan_id(line);
-		validate_overlap(id, check_overlap);
-		if (id == ERROR)
-			error_exit("Parsing Error", 1);
-		else if (id < A)
-			line += 2;
-		else
-			line++;
-		fp[id](scene, line);
+		if (*line != '\n')
+		{
+			id = scan_id(line);
+			validate_overlap(id, check_overlap);
+			if (id == ERROR)
+				error_exit("Parsing Error", 1);
+			else if (id < A)
+				line += 2;
+			else
+				line++;
+			fp[id](scene, line);
+		}
 		free(tmp);
 	}
 }

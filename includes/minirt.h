@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 19:47:59 by daewoole         ###   ########.fr       */
+/*   Updated: 2023/06/23 20:46:23 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,9 +236,7 @@ typedef struct s_scene
 	bool		lighting;
 }	t_scene;
 
-typedef struct s_hit_fp {
-	bool			(*hit[4])(t_lst *, t_ray *, double, t_hit_record *);
-} t_hit_fp;
+typedef bool	(*t_hit_fp)(t_lst *, t_ray *, double, t_hit_record *);
 
 // main.c
 void		init(t_scene *scene, t_screen *screen);
