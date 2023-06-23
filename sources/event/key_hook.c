@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:30:45 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/20 18:32:26 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 22:20:53 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	key_hook(int keycode, t_scene *scene)
 {
+	if (keycode == EXIT)
+		exit_hook(EXIT_SUCCESS);
 	mode(keycode, scene);
 	camera_move(keycode, &scene->c);
 	camera_rotation(keycode, &scene->c);

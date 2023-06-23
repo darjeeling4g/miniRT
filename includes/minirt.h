@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 20:04:39 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 22:20:25 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@
 # define RESOLUTION 19
 // 3
 # define AA 20
+// esc
+# define EXIT 53
 
 typedef struct s_generic_lst	t_lst;
 
@@ -237,6 +239,7 @@ typedef struct s_scene
 // main.c
 void		init(t_scene *scene, t_screen *screen);
 void		render(t_scene *scene, t_screen *screen);
+int			exit_hook(int code);
 
 // utils.c
 void		error_exit(char *msg, int code);

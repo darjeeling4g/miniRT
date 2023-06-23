@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/20 17:38:51 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 22:19:58 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	main(int argc, char *argv[])
 	parser(fd, &scene);
 	render(&scene, &screen);
 	mlx_hook(screen.win_ptr, 2, 0, key_hook, &scene);
+	mlx_hook(screen.win_ptr, 17, 0, exit_hook, EXIT_SUCCESS);
 	mlx_loop(screen.mlx_ptr);
 	exit(EXIT_SUCCESS);
 }
@@ -48,4 +49,10 @@ void	init(t_scene *scene, t_screen *screen)
 	scene->screen = screen;
 	scene->lighting = true;
 	scene->samples = 1;
+}
+
+int	exit_hook(int code)
+{
+	exit(code);
+	return (0);
 }

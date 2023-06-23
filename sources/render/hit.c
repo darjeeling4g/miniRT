@@ -6,7 +6,7 @@
 /*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 19:30:03 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/22 21:47:57 by siyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record *
 
 bool	hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	bool			(*hit[4])(t_lst *, t_ray *, double, t_hit_record *);
+	bool			((*hit[4])(t_lst *, t_ray *, double, t_hit_record *));
 	bool			is_hit;
 	t_hit_record	temp_rec;
 	double			closest_so_far;
