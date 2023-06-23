@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   hit.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: siyang <siyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/06/22 21:47:57 by siyang           ###   ########.fr       */
+=======
+/*   Updated: 2023/06/23 16:11:42 by daewoole         ###   ########.fr       */
+>>>>>>> 35f5236e8e03fb57d4521994b9070a3fae79e963
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +52,3 @@ bool	hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	return (is_hit);
 }
 
-double	get_root(double a, double b, double c, double t_max)
-{
-	double		discriminant;
-	double		sqrtd;
-	double		root;
-
-	discriminant = b * b - 4.0 * a * c;
-	if (discriminant < 0.0)
-		return (-1);
-	sqrtd = sqrt(discriminant);
-	root = (-b - sqrtd) / (2.0 * a);
-	if (root < T_MIN || root > t_max)
-	{
-		root = (-b + sqrtd) / (2.0 * a);
-		if (root < T_MIN || root > t_max)
-			return (-1);
-	}
-	return (root);
-}

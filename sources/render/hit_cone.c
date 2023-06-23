@@ -15,16 +15,15 @@
 bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 {
 	t_cone		*cone;
-	double		a;
-	double		b;
-	double		c;
-	t_point3	vertex;
-	double		cosine;
 	t_vec3		cp;
 	double		base;
 
 	cone = (t_cone *)obj;
 	base = hit_co_base(cone, ray, t_max, rec);
+<<<<<<< HEAD
+	rec->t = get_root(obj, ray, t_max);
+	cp = vector_add(vector_sub(ray->origin, get_vertex(cone)), scala_mul(ray->direction, rec->t));
+=======
 	base = -1;
 	cosine = cos(atan2(cone->diameter / 2.0, cone->height));
 	vertex = vector_sub(cone->base_center, scala_mul(cone->vec, cone->height));
@@ -39,6 +38,7 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 
 	rec->t = get_root(a, b, c, t_max);
 	cp = vector_add(vector_sub(ray->origin, vertex), scala_mul(ray->direction, rec->t));
+>>>>>>> 443ef65adc09a0d3af89a1efd6df001bd64b50ca
 	if (dot(cp, cone->vec) > cone->height || dot(unit_vector(cp), cone->vec) < 0.0)
 		rec->t = -1;
 	if (rec->t == -1 && base == -1)
@@ -49,12 +49,22 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		return (true);
 	}
 	rec->p = ray_at(ray, rec->t);
-	rec->normal = unit_vector(vector_sub(cp, scala_mul(cone->vec, length(cp) / cosine)));
+	rec->normal = unit_vector(vector_sub(cp, scala_mul(cone->vec, length(cp) / get_cosine(cone))));
 	if (dot(ray->direction, rec->normal) > 0.0)
 		rec->normal = scala_mul(rec->normal, -1);
 	rec->color = cone->color;
 	rec->texture = NONE;
 	return (true);
+}
+
+t_vec3	get_vertex(t_cone *cone)
+{
+	return (vector_sub(cone->base_center, scala_mul(cone->vec, cone->height)));
+}
+
+double	get_cosine(t_cone *cone)
+{
+	return (cos(atan2(cone->diameter / 2.0, cone->height)));
 }
 
 double	hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec)

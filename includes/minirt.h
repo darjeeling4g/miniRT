@@ -288,7 +288,13 @@ int			write_color(t_color3 color);
 // hit.c
 void		init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool		hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
-double		get_root(double a, double b, double c, double t_max);
+
+// hit_utils.c
+double	get_root(t_lst *obj, t_ray *ray, double t_max);
+double*	get_coef(t_lst *obj, t_ray *ray);
+double*	get_coef_co(t_lst *obj, t_ray *ray);
+double*	get_coef_sp(t_lst *obj, t_ray *ray);
+double	calc_discriminant(double a, double b, double c, double t_max);
 
 // hit_sphere.c
 bool		hit_sp(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
@@ -306,6 +312,8 @@ void		set_cy_rec(t_cylinder *cy, t_ray *ray, t_hit_record *rec, int surface);
 // hit_cone.c
 bool		hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 double		hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec);
+t_vec3	get_vertex(t_cone *cone);
+double	get_cosine(t_cone *cone);
 
 // texture.c
 void		texture_mapping(t_hit_record *rec, t_img *bump);
