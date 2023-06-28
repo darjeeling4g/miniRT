@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:58:39 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/28 13:36:44 by daewoole         ###   ########.fr       */
+/*   Updated: 2023/06/28 13:38:50 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	main(int argc, char *argv[])
 	t_screen	screen;
 
 	if (ft_strncmp((argv[1] + ft_strlen(argv[1]) - 3), ".rt", 4))
-		error_exit("Error: invalid file name", 1);
+		error_exit("Error\n: invalid file name", 1);
 	if (argc != 2)
-		error_exit("Error: invalid argument", 1);
+		error_exit("Error\n: invalid argument", 1);
 	fd = open(argv[1], O_RDONLY);
 	init(&scene, &screen);
 	parser(fd, &scene);
