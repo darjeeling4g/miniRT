@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:59:14 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 20:46:23 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/28 13:25:11 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@
 
 # define ON 1
 # define OFF 0
+
+# define POINT 1
+# define DIRECTION 2
 
 // W
 # define FORWARD 13
@@ -236,7 +239,8 @@ typedef struct s_scene
 	bool		lighting;
 }	t_scene;
 
-typedef bool	(*t_hit_fp)(t_lst *, t_ray *, double, t_hit_record *);
+typedef bool					(*t_hit_fp)\
+(t_lst *, t_ray *, double, t_hit_record *);
 
 // main.c
 void		init(t_scene *scene, t_screen *screen);
@@ -272,11 +276,12 @@ void		l_parser(t_scene *scene, char *line);
 double		get_float(char **line);
 t_color3	get_color(char **line);
 int			get_fov(char **line);
-t_point3	get_coordinate(char **line);
-t_vec3		get_vector(char **line);
+t_vec3		get_vector(char **line, int flag);
 t_type		get_texture(char **line);
 
 // parser_validation.c
+int			interpret_line(t_scene *scene, char *line, \
+void (*fp[7])(t_scene *, char *), int *check_overlap);
 int			validate_argument(char *line);
 void		validate_overlap(int id, int *check_overlap);
 
@@ -288,7 +293,8 @@ void		draw_pixel(t_screen *screen, t_color3 color, int x, int y);
 int			write_color(t_color3 color);
 
 // hit.c
-void		init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
+void		init_hit(bool (*fp[4])\
+(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec));
 bool		hit_obj(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 
 // hit_utils.c
@@ -308,14 +314,18 @@ bool		hit_pl(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 bool		hit_cy(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
 double		hit_cy_base(t_cylinder *cy, t_ray *ray, double t_max, bool is_top);
 double		hit_cy_side(t_cylinder *cy, t_ray *ray, double t_max);
-t_type		select_type(double top, double bottom, double side, t_hit_record *rec);
-void		set_cy_rec(t_cylinder *cy, t_ray *ray, t_hit_record *rec, int surface);
+t_type		select_type(double top, double bottom, \
+double side, t_hit_record *rec);
+void		set_cy_rec(t_cylinder *cy, t_ray *ray, \
+t_hit_record *rec, int surface);
 
 // hit_cone.c
 bool		hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec);
-double		hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec);
+double		hit_co_base(t_cone *cone, t_ray *ray, \
+double t_max, t_hit_record *rec);
 t_vec3		get_vertex(t_cone *cone);
 double		get_cosine(t_cone *cone);
+void		make_rec(t_hit_record *rec, t_ray *ray, t_cone *cone, t_vec3 cp);
 
 // texture.c
 void		texture_mapping(t_hit_record *rec, t_img *bump);

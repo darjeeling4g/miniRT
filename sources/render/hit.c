@@ -6,13 +6,13 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 18:43:21 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 20:46:50 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/28 12:31:00 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void	init_hit(bool (*fp[4])(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec))
+void	init_hit(t_hit_fp fp[4])
 {
 	fp[SP] = hit_sp;
 	fp[PL] = hit_pl;

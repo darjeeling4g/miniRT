@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:15:05 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 18:43:32 by daewoole         ###   ########.fr       */
+/*   Updated: 2023/06/28 12:41:16 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 	cone = (t_cone *)obj;
 	base = hit_co_base(cone, ray, t_max, rec);
 	rec->t = get_root(obj, ray, t_max);
-	cp = vector_add(vector_sub(ray->origin, get_vertex(cone)), scala_mul(ray->direction, rec->t));
-	if (dot(cp, cone->vec) > cone->height || dot(unit_vector(cp), cone->vec) < 0.0)
+	cp = vector_add(vector_sub(ray->origin, get_vertex(cone)), \
+	scala_mul(ray->direction, rec->t));
+	if (dot(cp, cone->vec) > cone->height || \
+	dot(unit_vector(cp), cone->vec) < 0.0)
 		rec->t = -1;
 	if (rec->t == -1 && base == -1)
 		return (false);
@@ -31,13 +33,19 @@ bool	hit_co(t_lst *obj, t_ray *ray, double t_max, t_hit_record *rec)
 		rec->t = base;
 		return (true);
 	}
+	make_rec(rec, ray, cone, cp);
+	return (true);
+}
+
+void	make_rec(t_hit_record *rec, t_ray *ray, t_cone *cone, t_vec3 cp)
+{
 	rec->p = ray_at(ray, rec->t);
-	rec->normal = unit_vector(vector_sub(cp, scala_mul(cone->vec, length(cp) / get_cosine(cone))));
+	rec->normal = unit_vector(vector_sub(cp, scala_mul(cone->vec, \
+	length(cp) / get_cosine(cone))));
 	if (dot(ray->direction, rec->normal) > 0.0)
 		rec->normal = scala_mul(rec->normal, -1);
 	rec->color = cone->color;
 	rec->texture = NONE;
-	return (true);
 }
 
 t_vec3	get_vertex(t_cone *cone)
@@ -52,9 +60,9 @@ double	get_cosine(t_cone *cone)
 
 double	hit_co_base(t_cone *cone, t_ray *ray, double t_max, t_hit_record *rec)
 {
-	double 		denom;
-	double		nom;
-	double		r;
+	double	denom;
+	double	nom;
+	double	r;
 
 	rec->normal = cone->vec;
 	if (dot(rec->normal, ray->direction) > 0.0)

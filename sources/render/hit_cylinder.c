@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:15:02 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 19:07:15 by daewoole         ###   ########.fr       */
+/*   Updated: 2023/06/28 12:32:48 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ double	hit_cy_side(t_cylinder *cy, t_ray *ray, double t_max)
 	t_point3	p;
 	t_vec3		cp;
 
-	root = get_root((t_lst*)cy, ray, t_max);
+	root = get_root((t_lst *)cy, ray, t_max);
 	if (root == -1)
 		return (-1);
 	p = ray_at(ray, root);

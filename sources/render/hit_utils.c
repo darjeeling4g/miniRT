@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:59:23 by daewoole          #+#    #+#             */
-/*   Updated: 2023/06/23 19:22:01 by daewoole         ###   ########.fr       */
+/*   Updated: 2023/06/28 12:32:34 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ double	get_root(t_lst *obj, t_ray *ray, double t_max)
 {
 	t_point3	coef;
 
-	coef = vec3(0,0,0);
+	coef = vec3(0, 0, 0);
 	if (obj->id == SP)
 		coef = get_coef_sp(obj, ray);
 	else if (obj->id == CO)
@@ -32,7 +32,7 @@ t_point3	get_coef_cy(t_lst *obj, t_ray *ray)
 	t_vec3		ce;
 	t_cylinder	*cy;
 
-	cy = (t_cylinder*)obj;
+	cy = (t_cylinder *)obj;
 	ce = vector_sub(ray->origin, vector_sub(cy->coord, \
 			scala_mul(cy->vec, cy->height / 2.0)));
 	coef.x = dot(ray->direction, ray->direction) \
@@ -52,10 +52,12 @@ t_point3	get_coef_co(t_lst *obj, t_ray *ray)
 	cone = (t_cone *)obj;
 	coef.x = dot(ray->direction, ray->direction) * pow(get_cosine(cone), 2.0) \
 	- pow(dot(ray->direction, cone->vec), 2.0);
-	coef.y = 2 * dot(vector_sub(ray->origin,  get_vertex(cone)), ray->direction) * pow(get_cosine(cone), 2.0) \
-	- 2 * dot(ray->direction, cone->vec) * dot(vector_sub(ray->origin,  get_vertex(cone)), cone->vec);	
-	coef.z = dot(vector_sub(ray->origin,  get_vertex(cone)), vector_sub(ray->origin,  get_vertex(cone))) \
-	* pow(get_cosine(cone), 2.0) - pow(dot(vector_sub(ray->origin,  get_vertex(cone)), cone->vec), 2.0);
+	coef.y = 2 * dot(vector_sub(ray->origin, get_vertex(cone)), ray->direction) \
+	* pow(get_cosine(cone), 2.0) - 2 * dot(ray->direction, cone->vec) * \
+	dot(vector_sub(ray->origin, get_vertex(cone)), cone->vec);
+	coef.z = dot(vector_sub(ray->origin, get_vertex(cone)), \
+	vector_sub(ray->origin, get_vertex(cone))) * pow(get_cosine(cone), 2.0) \
+	- pow(dot(vector_sub(ray->origin, get_vertex(cone)), cone->vec), 2.0);
 	return (coef);
 }
 

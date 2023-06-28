@@ -6,7 +6,7 @@
 /*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 14:58:00 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/23 20:50:05 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/28 13:23:24 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,18 @@
 
 void	parser(int fd, t_scene *scene)
 {
-	char	*line;
-	int		id;
-	void	(*fp[7])(t_scene *, char *);
 	int		check_overlap[2];
-	char	*tmp;
+	char	*line;
+	void	(*fp[7])(t_scene *, char *);
 
 	init_parser(fp);
 	ft_bzero(check_overlap, sizeof(int) * 2);
 	while (true)
 	{
 		line = get_next_line(fd);
-		tmp = line;
-		if (line == NULL)
+		if (interpret_line(scene, line, fp, check_overlap))
 			return ;
-		if (*line != '\n')
-		{
-			id = scan_id(line);
-			validate_overlap(id, check_overlap);
-			if (id == ERROR)
-				error_exit("Parsing Error", 1);
-			else if (id < A)
-				line += 2;
-			else
-				line++;
-			fp[id](scene, line);
-		}
-		free(tmp);
+		free(line);
 	}
 }
 
@@ -87,13 +72,13 @@ void	a_parser(t_scene *scene, char *line)
 {
 	scene->a.ratio = get_float(&line);
 	if (scene->a.ratio < 0.0 || scene->a.ratio > 1.0)
-		error_exit("Parsing error", 1);
+		error_exit("Error\n: Invalid ambient light ratio value", 1);
 	scene->a.color = get_color(&line);
 }
 
 void	c_parser(t_scene *scene, char *line)
 {
-	scene->c.coord = get_coordinate(&line);
-	scene->c.vec = get_vector(&line);
+	scene->c.coord = get_vector(&line, POINT);
+	scene->c.vec = get_vector(&line, DIRECTION);
 	scene->c.fov = get_fov(&line);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_lst.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: siyang <siyang@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: daewoole <daewoole@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:04:38 by siyang            #+#    #+#             */
-/*   Updated: 2023/06/22 20:04:13 by siyang           ###   ########.fr       */
+/*   Updated: 2023/06/28 13:15:17 by daewoole         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	l_parser(t_scene *scene, char *line)
 	light = (t_light *)malloc(sizeof(t_light));
 	if (!light)
 		exit(EXIT_FAILURE);
-	light->coord = get_coordinate(&line);
+	light->coord = get_vector(&line, POINT);
 	light->ratio = get_float(&line);
 	if (scene->a.ratio < 0.0 || scene->a.ratio > 1.0)
-		error_exit("Parsing error", 1);
+		error_exit("Error\n: Parsing error", 1);
 	light->color = get_color(&line);
 	light->next = NULL;
 	light->id = L;
@@ -36,7 +36,7 @@ void	sp_parser(t_scene *scene, char *line)
 	sp = (t_sphere *)malloc(sizeof(t_sphere));
 	if (!sp)
 		exit(EXIT_FAILURE);
-	sp->coord = get_coordinate(&line);
+	sp->coord = get_vector(&line, POINT);
 	sp->radius = get_float(&line) / 2.0;
 	sp->color = get_color(&line);
 	sp->texture = get_texture(&line);
@@ -52,8 +52,8 @@ void	pl_parser(t_scene *scene, char *line)
 	pl = (t_plane *)malloc(sizeof(t_plane));
 	if (!pl)
 		exit(EXIT_FAILURE);
-	pl->coord = get_coordinate(&line);
-	pl->vec = get_vector(&line);
+	pl->coord = get_vector(&line, POINT);
+	pl->vec = get_vector(&line, DIRECTION);
 	pl->color = get_color(&line);
 	pl->texture = get_texture(&line);
 	pl->next = NULL;
@@ -68,8 +68,8 @@ void	cy_parser(t_scene *scene, char *line)
 	cy = (t_cylinder *)malloc(sizeof(t_cylinder));
 	if (!cy)
 		exit(EXIT_FAILURE);
-	cy->coord = get_coordinate(&line);
-	cy->vec = unit_vector(get_vector(&line));
+	cy->coord = get_vector(&line, POINT);
+	cy->vec = unit_vector(get_vector(&line, DIRECTION));
 	cy->diameter = get_float(&line);
 	cy->height = get_float(&line);
 	cy->color = get_color(&line);
@@ -86,8 +86,8 @@ void	co_parser(t_scene *scene, char *line)
 	co = (t_cone *)malloc(sizeof(t_cone));
 	if (!co)
 		exit(EXIT_FAILURE);
-	co->base_center = get_coordinate(&line);
-	co->vec = unit_vector(get_vector(&line));
+	co->base_center = get_vector(&line, POINT);
+	co->vec = unit_vector(get_vector(&line, DIRECTION));
 	co->diameter = get_float(&line);
 	co->height = get_float(&line);
 	co->color = get_color(&line);
