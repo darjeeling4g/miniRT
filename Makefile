@@ -7,6 +7,7 @@ CFLAGS				:= -Wall -Wextra -Werror -O2
 CPPFLAGS			= -I includes -I $(LIBFT_DIR)/includes -I $(MLX_DIR)
 LDFLAGS				= -L $(LIBFT_DIR) -L .
 LDLIBS				:= -l ft -l mlx
+MJ				= -MJ $(patsubst $(BUILD_DIR)/$(OBJ_DIR)/%.o, $(BUILD_DIR)/$(JSON_DIR)/%.part.json, $@)
 
 # ---------------------------------------------------------------------------- #
 #	Define the libraries													   #
@@ -30,6 +31,7 @@ GENERIC_LST_DIR		:= generic_lst
 
 BUILD_DIR			:= build
 OBJ_DIR				:= obj
+JSON_DIR			:= json
 
 # ---------------------------------------------------------------------------- #
 #	Define the source files													   #
@@ -65,6 +67,7 @@ STEP				:= 100
 LIBFT				:= $(LIBFT_DIR)/libft.a
 MLX					:= libmlx.dylib
 NAME				:= miniRT
+JSON				:= compile_commands.json
 
 # ---------------------------------------------------------------------------- #
 #	Define the rules														   #
@@ -84,8 +87,8 @@ $(NAME): $(OBJS) $(LIBFT) $(MLX)
 		@$(CC) $(CFLAGS) $(LDLIBS) $(LDFLAGS) $(OBJS) -o $@
 		@printf "\n$(MAGENTA)[$(NAME)] Linking Success\n$(DEF_COLOR)"
 
-$(BUILD_DIR)/$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c | dir_guard
-		@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+$(BUILD_DIR)/$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | dir_guard
+		@$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@ $(MJ) 
 		@$(eval COMPILED_FILES = $(shell expr $(COMPILED_FILES) + 1))
 		@$(eval PROGRESS = $(shell expr $(COMPILED_FILES) "*" $(STEP) / $(TOTAL_FILES)))
 		@printf "$(SAVECUR) $(DELINE) $(YELLOW)[$(NAME)] [%02d/%02d] ( %3d %%) Compiling $<\r$(DEF_COLOR) $(RESTCUR)" $(COMPILED_FILES) $(TOTAL_FILES) $(PROGRESS)
@@ -99,7 +102,7 @@ clean:
 fclean:
 		@$(MAKE) -C $(LIBFT_DIR) fclean
 		@$(MAKE) -C $(MLX_DIR) clean
-		@$(RM) -r $(BUILD_DIR) $(NAME) $(MLX)
+		@$(RM) -r $(BUILD_DIR) $(NAME) $(MLX) $(JSON)
 		@printf "$(BLUE)[$(NAME)] obj. files$(DEF_COLOR)$(GREEN)	=> Cleaned!\n$(DEF_COLOR)"
 		@printf "$(CYAN)[$(NAME)] exec. files$(DEF_COLOR)$(GREEN)	=> Cleaned!\n$(DEF_COLOR)"
 
@@ -108,9 +111,13 @@ re:
 		@$(MAKE) all
 		@printf "$(GREEN)[$(NAME)] Cleaned and rebuilt everything!\n$(DEF_COLOR)"
 
+json:
+		@$(MAKE) --always-make --keep-going all
+		@(echo '[' && find . -name "*.part.json" | xargs cat && echo ']') > $(JSON)
+
 dir_guard:
-		@mkdir -p $(addprefix $(BUILD_DIR)/$(OBJ_DIR)/, $(MAIN_DIR) $(PARSER_DIR) $(RENDER_DIR) \
-			$(EVENT_DIR) $(VECTOR_DIR) $(GENERIC_LST_DIR))
+		@mkdir -p $(addprefix $(BUILD_DIR)/$(OBJ_DIR)/, $(MAIN_DIR) $(PARSER_DIR) $(RENDER_DIR) $(EVENT_DIR) $(VECTOR_DIR) $(GENERIC_LST_DIR)) \
+			$(addprefix $(BUILD_DIR)/$(JSON_DIR)/, $(MAIN_DIR) $(PARSER_DIR) $(RENDER_DIR) $(EVENT_DIR) $(VECTOR_DIR) $(GENERIC_LST_DIR))
 
 norm:
 		@$(MAKE) -C $(LIBFT_DIR) norm
